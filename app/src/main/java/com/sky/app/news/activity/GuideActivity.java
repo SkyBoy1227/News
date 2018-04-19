@@ -36,6 +36,8 @@ public class GuideActivity extends AppCompatActivity {
     Button btnStartMain;
     @BindView(R.id.ll_point_group)
     LinearLayout llPointGroup;
+    @BindView(R.id.iv_point_red)
+    ImageView ivPointRed;
 
     private List<ImageView> imageViews;
 
@@ -51,13 +53,29 @@ public class GuideActivity extends AppCompatActivity {
                 R.drawable.guide_3
         };
         imageViews = new ArrayList<>();
-        for (int id : ids) {
+
+        for (int i = 0; i < ids.length; i++) {
             ImageView imageView = new ImageView(this);
             // 设置背景
-            imageView.setBackgroundResource(id);
+            imageView.setBackgroundResource(ids[i]);
 
             // 添加到集合中
             imageViews.add(imageView);
+
+            // 创建点
+            ImageView point = new ImageView(this);
+            point.setBackgroundResource(R.drawable.point_normal);
+            /*
+             * 单位是像素
+             */
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(10, 10);
+            if (i != 0) {
+                // 不包括第0个，所有的点距离左边有10个像素
+                params.leftMargin = 10;
+            }
+            point.setLayoutParams(params);
+            // 添加到线性布局里面
+            llPointGroup.addView(point);
         }
         // 设置ViewPager的适配器
         viewPager.setAdapter(new MyPagerAdapter());

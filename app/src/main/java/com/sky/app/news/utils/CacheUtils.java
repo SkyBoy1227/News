@@ -1,6 +1,7 @@
 package com.sky.app.news.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 /**
  * Created with Android Studio.
@@ -21,6 +22,7 @@ public class CacheUtils {
      * @return
      */
     public static boolean getBoolean(Context context, String key) {
-        return false;
+        SharedPreferences sp = context.getSharedPreferences("sky", Context.MODE_PRIVATE);
+        return sp.getBoolean(key, false);
     }
 }
