@@ -76,7 +76,8 @@ public class SplashActivity extends AppCompatActivity {
                 boolean isStartMain = CacheUtils.getBoolean(SplashActivity.this, START_MAIN);
                 if (isStartMain) {
                     // 如果进入过主页面，直接进入主页面
-
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
                 } else {
                     // 如果没有进入过主页面，进入引导页面
                     Intent intent = new Intent(SplashActivity.this, GuideActivity.class);

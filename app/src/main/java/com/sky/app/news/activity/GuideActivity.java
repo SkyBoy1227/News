@@ -1,5 +1,6 @@
 package com.sky.app.news.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.sky.app.news.R;
+import com.sky.app.news.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +97,19 @@ public class GuideActivity extends AppCompatActivity {
         ivPointRed.getViewTreeObserver().addOnGlobalLayoutListener(new MyOnGlobalLayoutListener());
         // 得到屏幕滑动的百分比
         viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+
+        // 设置按钮的点击事件
+        btnStartMain.setOnClickListener(v -> {
+            // 1.保存曾经进入过主页面
+            CacheUtils.putBoolean(GuideActivity.this, SplashActivity.START_MAIN, true);
+
+            // 2.跳转到主页面
+            Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+            startActivity(intent);
+
+            // 3.关闭引导页面
+            finish();
+        });
     }
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
@@ -114,6 +129,7 @@ public class GuideActivity extends AppCompatActivity {
             // 两点间滑动距离对应的坐标 = 原来的起始位置 +  两点间移动的距离
             int leftmargin = (int) (position * leftmax + positionOffset * leftmax);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivPointRed.getLayoutParams();
+            // params.leftMargin = 两点间滑动距离对应的坐标
             params.leftMargin = leftmargin;
             ivPointRed.setLayoutParams(params);
         }
@@ -125,7 +141,13 @@ public class GuideActivity extends AppCompatActivity {
          */
         @Override
         public void onPageSelected(int position) {
-
+            if (position == imageViews.size() - 1) {
+                // 最后一个页面
+                btnStartMain.setVisibility(View.VISIBLE);
+            } else {
+                // 其他页面
+                btnStartMain.setVisibility(View.GONE);
+            }
         }
 
         /**
