@@ -41,6 +41,11 @@ public class GuideActivity extends AppCompatActivity {
 
     private List<ImageView> imageViews;
 
+    /**
+     * 两点的间距
+     */
+    private int leftmax;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,8 +82,52 @@ public class GuideActivity extends AppCompatActivity {
             // 添加到线性布局里面
             llPointGroup.addView(point);
         }
+
         // 设置ViewPager的适配器
         viewPager.setAdapter(new MyPagerAdapter());
+
+        // 根据View的生命周期，当视图执行到onLayout或者onDraw的时候，视图的高和宽，边距就都有了
+        ivPointRed.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            // 间距  = 第1个点距离左边的距离 - 第0个点距离左边的距离
+            leftmax = llPointGroup.getChildAt(1).getLeft() - llPointGroup.getChildAt(0).getLeft();
+        });
+        // 得到屏幕滑动的百分比
+        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+    }
+
+    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        /**
+         * 当页面滑动了会回调这个方法
+         *
+         * @param position             当前滑动页面的位置
+         * @param positionOffset       页面滑动的百分比
+         * @param positionOffsetPixels 滑动的像素
+         */
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        /**
+         * 当页面被选中的时候，回调这个方法
+         *
+         * @param position 被选中的页面对应的位置
+         */
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        /**
+         * 当ViewPager页面滑动状态发生变化的时候
+         *
+         * @param state
+         */
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
     }
 
     class MyPagerAdapter extends PagerAdapter {
