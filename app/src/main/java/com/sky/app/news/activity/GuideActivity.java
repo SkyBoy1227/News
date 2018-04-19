@@ -6,11 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.sky.app.news.R;
 
@@ -30,6 +33,8 @@ import butterknife.ButterKnife;
  * @version ${VERSION}
  */
 public class GuideActivity extends AppCompatActivity {
+    private static final String TAG = GuideActivity.class.getSimpleName();
+
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.btn_start_main)
@@ -87,10 +92,7 @@ public class GuideActivity extends AppCompatActivity {
         viewPager.setAdapter(new MyPagerAdapter());
 
         // 根据View的生命周期，当视图执行到onLayout或者onDraw的时候，视图的高和宽，边距就都有了
-        ivPointRed.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            // 间距  = 第1个点距离左边的距离 - 第0个点距离左边的距离
-            leftmax = llPointGroup.getChildAt(1).getLeft() - llPointGroup.getChildAt(0).getLeft();
-        });
+        ivPointRed.getViewTreeObserver().addOnGlobalLayoutListener(new MyOnGlobalLayoutListener());
         // 得到屏幕滑动的百分比
         viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
     }
@@ -106,7 +108,14 @@ public class GuideActivity extends AppCompatActivity {
          */
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+            // 两点间移动的距离 = 屏幕滑动百分比 * 间距
+//            int leftmargin = (int) (positionOffset * leftmax);
+//            Log.e(TAG, "position = " + position + " , positionOffset = " + positionOffset + " , positionOffsetPixels = " + positionOffsetPixels);
+            // 两点间滑动距离对应的坐标 = 原来的起始位置 +  两点间移动的距离
+            int leftmargin = (int) (position * leftmax + positionOffset * leftmax);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivPointRed.getLayoutParams();
+            params.leftMargin = leftmargin;
+            ivPointRed.setLayoutParams(params);
         }
 
         /**
@@ -127,6 +136,18 @@ public class GuideActivity extends AppCompatActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
 
+        }
+    }
+
+    class MyOnGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        @Override
+        public void onGlobalLayout() {
+            // 该接口的方法执行不只一次，为了避免执行多次，要加上如下代码：
+            ivPointRed.getViewTreeObserver().removeGlobalOnLayoutListener(MyOnGlobalLayoutListener.this);
+            // 间距  = 第1个点距离左边的距离 - 第0个点距离左边的距离
+            leftmax = llPointGroup.getChildAt(1).getLeft() - llPointGroup.getChildAt(0).getLeft();
+            Log.e(TAG, "leftmax = " + leftmax);
         }
     }
 
