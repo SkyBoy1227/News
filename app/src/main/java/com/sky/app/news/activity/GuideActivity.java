@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 
 import com.sky.app.news.R;
 import com.sky.app.news.utils.CacheUtils;
+import com.sky.app.news.utils.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class GuideActivity extends AppCompatActivity {
      * 两点的间距
      */
     private int leftmax;
+    private int widthdpi;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +67,8 @@ public class GuideActivity extends AppCompatActivity {
                 R.drawable.guide_3
         };
         imageViews = new ArrayList<>();
+        widthdpi = DensityUtil.dip2px(this, 10);
+        Log.e(TAG, "widthdpi = " + widthdpi);
 
         for (int i = 0; i < ids.length; i++) {
             ImageView imageView = new ImageView(this);
@@ -80,10 +84,10 @@ public class GuideActivity extends AppCompatActivity {
             /*
              * 单位是像素
              */
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(10, 10);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(widthdpi, widthdpi);
             if (i != 0) {
                 // 不包括第0个，所有的点距离左边有10个像素
-                params.leftMargin = 10;
+                params.leftMargin = widthdpi;
             }
             point.setLayoutParams(params);
             // 添加到线性布局里面
