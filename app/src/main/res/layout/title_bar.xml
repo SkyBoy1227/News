@@ -20,5 +20,6 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/img_menu" />
+        android:src="@drawable/img_menu"
+        android:visibility="gone" />
 </RelativeLayout>
