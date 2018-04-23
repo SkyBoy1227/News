@@ -74,6 +74,34 @@ public class ContentFragment extends BaseFragment {
 
         // 设置ViewPager的适配器
         viewPager.setAdapter(new ContentFragmentAdapter());
+
+        // 设置RadioGroup的选中状态改变的监听
+        rgBottom.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                // 主页RadioButton的id
+                case R.id.rb_home:
+                    viewPager.setCurrentItem(0, false);
+                    break;
+                // 新闻中心RadioButton的id
+                case R.id.rb_newscenter:
+                    viewPager.setCurrentItem(1, false);
+                    break;
+                // 智慧服务RadioButton的id
+                case R.id.rb_smartservice:
+                    viewPager.setCurrentItem(2, false);
+                    break;
+                // 政要指南RadioButton的id
+                case R.id.rb_govaffair:
+                    viewPager.setCurrentItem(3, false);
+                    break;
+                // 设置中心RadioButton的id
+                case R.id.rb_setting:
+                    viewPager.setCurrentItem(4, false);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     class ContentFragmentAdapter extends PagerAdapter {
