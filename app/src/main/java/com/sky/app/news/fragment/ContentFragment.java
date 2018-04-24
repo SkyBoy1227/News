@@ -2,6 +2,7 @@ package com.sky.app.news.fragment;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
@@ -69,9 +70,6 @@ public class ContentFragment extends BaseFragment {
         // 设置中心
         basePagers.add(new SettingPager(context));
 
-        // 设置默认选中首页
-        rgBottom.check(R.id.rb_home);
-
         // 设置ViewPager的适配器
         viewPager.setAdapter(new ContentFragmentAdapter());
 
@@ -102,6 +100,38 @@ public class ContentFragment extends BaseFragment {
                     break;
             }
         });
+
+        // 监听某个页面被选中，初始对应的页面的数据
+        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+
+        // 设置默认选中首页
+        rgBottom.check(R.id.rb_home);
+
+        basePagers.get(0).initData();
+    }
+
+    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        /**
+         * 当某个页面被选中的时候回调这个方法
+         *
+         * @param position 被选中页面的位置
+         */
+        @Override
+        public void onPageSelected(int position) {
+            // 调用被选中的页面的initData方法
+            basePagers.get(position).initData();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
     }
 
     class ContentFragmentAdapter extends PagerAdapter {
@@ -117,7 +147,7 @@ public class ContentFragment extends BaseFragment {
             // 各个页面的实例
             BasePager basePager = basePagers.get(position);
             // 调用各个页面的initData()，初始化数据
-            basePager.initData();
+//            basePager.initData();
             // 各个子页面
             View rootView = basePager.rootView;
             container.addView(rootView);
