@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sky.app.news.base.BasePager;
+import com.sky.app.news.domain.NewsCenterPagerBean;
 import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
 
@@ -54,6 +56,7 @@ public class NewsCenterPager extends BasePager {
             @Override
             public void onSuccess(String result) {
                 LogUtil.e("使用xUtils3联网请求成功==" + result);
+                processData(result);
             }
 
             @Override
@@ -71,5 +74,26 @@ public class NewsCenterPager extends BasePager {
                 LogUtil.e("使用xUtils3-onFinished");
             }
         });
+    }
+
+    /**
+     * 解析json数据并且显示数据
+     *
+     * @param json
+     */
+    private void processData(String json) {
+        NewsCenterPagerBean bean = parseJson(json);
+        String title = bean.getData().get(0).getChildren().get(0).getTitle();
+        LogUtil.e("使用Gson解析json数据成功，title = " + title);
+    }
+
+    /**
+     * 解析json数据：1,使用系统的API解析json；2,使用第三方框架解析json数据，例如Gson,fastjson
+     *
+     * @param json
+     * @return
+     */
+    private NewsCenterPagerBean parseJson(String json) {
+        return new Gson().fromJson(json, NewsCenterPagerBean.class);
     }
 }

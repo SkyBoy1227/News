@@ -33,4 +33,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation project(':SlidingMenu_library')
     implementation 'org.xutils:xutils:3.5.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
 }
