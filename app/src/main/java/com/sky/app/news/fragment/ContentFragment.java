@@ -1,15 +1,13 @@
 package com.sky.app.news.fragment;
 
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.sky.app.news.R;
 import com.sky.app.news.activity.MainActivity;
+import com.sky.app.news.adapter.ContentFragmentAdapter;
 import com.sky.app.news.base.BaseFragment;
 import com.sky.app.news.base.BasePager;
 import com.sky.app.news.pager.GovaffairPager;
@@ -73,7 +71,7 @@ public class ContentFragment extends BaseFragment {
         basePagers.add(new SettingPager(context));
 
         // 设置ViewPager的适配器
-        viewPager.setAdapter(new ContentFragmentAdapter());
+        viewPager.setAdapter(new ContentFragmentAdapter(basePagers));
 
         // 设置RadioGroup的选中状态改变的监听
         rgBottom.setOnCheckedChangeListener((group, checkedId) -> {
@@ -151,37 +149,6 @@ public class ContentFragment extends BaseFragment {
         @Override
         public void onPageScrollStateChanged(int state) {
 
-        }
-    }
-
-    class ContentFragmentAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return basePagers.size();
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            // 各个页面的实例
-            BasePager basePager = basePagers.get(position);
-            // 调用各个页面的initData()，初始化数据
-//            basePager.initData();
-            // 各个子页面
-            View rootView = basePager.rootView;
-            container.addView(rootView);
-            return rootView;
-        }
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((View) object);
         }
     }
 }
