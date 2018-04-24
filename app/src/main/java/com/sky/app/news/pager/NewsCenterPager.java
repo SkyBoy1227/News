@@ -6,14 +6,18 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean;
+import com.sky.app.news.fragment.LeftMenuFragment;
 import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.util.List;
 
 /**
  * Created with Android Studio.
@@ -25,6 +29,11 @@ import org.xutils.x;
  * @version ${VERSION}
  */
 public class NewsCenterPager extends BasePager {
+    /**
+     * 左侧菜单对应的数据集合
+     */
+    private List<NewsCenterPagerBean.DataBean> data;
+
     public NewsCenterPager(Context context) {
         super(context);
     }
@@ -85,6 +94,12 @@ public class NewsCenterPager extends BasePager {
         NewsCenterPagerBean bean = parseJson(json);
         String title = bean.getData().get(0).getChildren().get(0).getTitle();
         LogUtil.e("使用Gson解析json数据成功，title = " + title);
+        // 将得到的数据传递给左侧菜单
+        data = bean.getData();
+        MainActivity mainActivity = (MainActivity) context;
+        // 得到左侧菜单
+        LeftMenuFragment leftMenuFragment = mainActivity.getLeftMenuFragment();
+        leftMenuFragment.setData(data);
     }
 
     /**
@@ -94,6 +109,8 @@ public class NewsCenterPager extends BasePager {
      * @return
      */
     private NewsCenterPagerBean parseJson(String json) {
+//        Gson gson = new Gson();
+//        NewsCenterPagerBean bean = gson.fromJson(json, NewsCenterPagerBean.class);
         return new Gson().fromJson(json, NewsCenterPagerBean.class);
     }
 }

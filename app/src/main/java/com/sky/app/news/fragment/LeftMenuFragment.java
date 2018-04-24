@@ -6,7 +6,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.sky.app.news.base.BaseFragment;
+import com.sky.app.news.domain.NewsCenterPagerBean;
 import com.sky.app.news.utils.LogUtil;
+
+import java.util.List;
 
 /**
  * Created with Android Studio.
@@ -19,6 +22,7 @@ import com.sky.app.news.utils.LogUtil;
  */
 public class LeftMenuFragment extends BaseFragment {
     private TextView textView;
+    private List<NewsCenterPagerBean.DataBean> data;
 
     @Override
     protected View initView() {
@@ -35,5 +39,17 @@ public class LeftMenuFragment extends BaseFragment {
         super.initData();
         LogUtil.e("左侧菜单Fragment数据被初始化了");
         textView.setText("左侧菜单页面");
+    }
+
+    /**
+     * 接收数据
+     *
+     * @param data
+     */
+    public void setData(List<NewsCenterPagerBean.DataBean> data) {
+        this.data = data;
+        for (NewsCenterPagerBean.DataBean bean : data) {
+            LogUtil.e("title = " + bean.getTitle());
+        }
     }
 }

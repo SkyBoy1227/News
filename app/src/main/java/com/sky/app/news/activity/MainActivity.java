@@ -85,4 +85,15 @@ public class MainActivity extends SlidingFragmentActivity {
                 .replace(R.id.fl_left_menu, new LeftMenuFragment(), LEFT_MENU_TAG)
                 .commit();*/
     }
+
+    /**
+     * 得到左侧菜单Fragment
+     *
+     * @return
+     */
+    public LeftMenuFragment getLeftMenuFragment() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        LeftMenuFragment leftMenuFragment = (LeftMenuFragment) fm.findFragmentByTag(LEFT_MENU_TAG);
+        return (LeftMenuFragment) getSupportFragmentManager().findFragmentByTag(LEFT_MENU_TAG);
+    }
 }
