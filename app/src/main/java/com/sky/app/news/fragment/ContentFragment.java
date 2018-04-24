@@ -2,7 +2,6 @@ package com.sky.app.news.fragment;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
@@ -16,6 +15,7 @@ import com.sky.app.news.pager.NewsCenterPager;
 import com.sky.app.news.pager.SettingPager;
 import com.sky.app.news.pager.SmartServicePager;
 import com.sky.app.news.utils.LogUtil;
+import com.sky.app.news.view.NoScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 public class ContentFragment extends BaseFragment {
 
     @BindView(R.id.view_pager)
-    ViewPager viewPager;
+    NoScrollViewPager viewPager;
     @BindView(R.id.rg_bottom)
     RadioGroup rgBottom;
 

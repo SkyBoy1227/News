@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.sky.app.news.R;
 import com.sky.app.news.fragment.ContentFragment;
 import com.sky.app.news.fragment.LeftMenuFragment;
-import com.sky.app.news.utils.DensityUtil;
 
 /**
  * Created with Android Studio.
@@ -45,8 +46,13 @@ public class MainActivity extends SlidingFragmentActivity {
         // 5.设置滑动模式：滑动边缘，全屏滑动，不可以滑动
         slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 
-        // 6.设置主页占据的宽度
-        slidingMenu.setBehindOffset(DensityUtil.dip2px(MainActivity.this, 200));
+        // 得到屏幕的宽度
+        WindowManager manager = this.getWindowManager();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        manager.getDefaultDisplay().getMetrics(outMetrics);
+        int width = outMetrics.widthPixels;
+        // 6.设置主页占据的宽度：屏幕的2/3
+        slidingMenu.setBehindOffset(width * 2 / 3);
 
         initFragments();
     }
