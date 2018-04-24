@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.sky.app.news.R;
+import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BaseFragment;
 import com.sky.app.news.base.BasePager;
 import com.sky.app.news.pager.GovaffairPager;
@@ -79,21 +81,26 @@ public class ContentFragment extends BaseFragment {
                 // 主页RadioButton的id
                 case R.id.rb_home:
                     viewPager.setCurrentItem(0, false);
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
                     break;
                 // 新闻中心RadioButton的id
                 case R.id.rb_newscenter:
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_FULLSCREEN);
                     viewPager.setCurrentItem(1, false);
                     break;
                 // 智慧服务RadioButton的id
                 case R.id.rb_smartservice:
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
                     viewPager.setCurrentItem(2, false);
                     break;
                 // 政要指南RadioButton的id
                 case R.id.rb_govaffair:
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
                     viewPager.setCurrentItem(3, false);
                     break;
                 // 设置中心RadioButton的id
                 case R.id.rb_setting:
+                    isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
                     viewPager.setCurrentItem(4, false);
                     break;
                 default:
@@ -108,6 +115,19 @@ public class ContentFragment extends BaseFragment {
         rgBottom.check(R.id.rb_home);
 
         basePagers.get(0).initData();
+
+        // 设置默认SlidingMenu不可以滑动
+        isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+    }
+
+    /**
+     * 根据传入的参数设置是否让SlidingMenu可以滑动
+     *
+     * @param touchMode 滑动模式
+     */
+    private void isEnableSlidingMenu(int touchMode) {
+        MainActivity mainActivity = (MainActivity) context;
+        mainActivity.getSlidingMenu().setTouchModeAbove(touchMode);
     }
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
