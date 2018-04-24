@@ -6,7 +6,12 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 import com.sky.app.news.base.BasePager;
+import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * Created with Android Studio.
@@ -37,5 +42,34 @@ public class NewsCenterPager extends BasePager {
         flContent.addView(textView);
         // 4.绑定数据
         textView.setText("新闻中心内容");
+        getDataFromNet();
+    }
+
+    /**
+     * 使用xUtils3联网请求数据
+     */
+    private void getDataFromNet() {
+        RequestParams params = new RequestParams(Constants.NEWSCENTER_PAGER_URL);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtil.e("使用xUtils3联网请求成功==" + result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                LogUtil.e("使用xUtils3联网请求失败==" + ex.getMessage());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                LogUtil.e("使用xUtils3-onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                LogUtil.e("使用xUtils3-onFinished");
+            }
+        });
     }
 }
