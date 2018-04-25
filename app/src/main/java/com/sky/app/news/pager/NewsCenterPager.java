@@ -11,6 +11,7 @@ import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BasePager;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean;
+import com.sky.app.news.domain.NewsCenterPagerBean2;
 import com.sky.app.news.fragment.LeftMenuFragment;
 import com.sky.app.news.menudetailpager.InteractMenuDetailPager;
 import com.sky.app.news.menudetailpager.NewsMenuDetailPager;
@@ -105,8 +106,11 @@ public class NewsCenterPager extends BasePager {
      */
     private void processData(String json) {
         NewsCenterPagerBean bean = parseJson(json);
+        NewsCenterPagerBean2 bean2 = parseJson2(json);
         String title = bean.getData().get(0).getChildren().get(0).getTitle();
         LogUtil.e("使用Gson解析json数据成功，title = " + title);
+        String title2 = bean2.getData().get(0).getChildren().get(0).getTitle();
+        LogUtil.e("使用Gson解析json数据成功NewsCenterPagerBean2------------------------title2 = " + title2);
         // 添加详情页面
         detailBasePagers = new ArrayList<>();
         // 新闻详情页面
@@ -124,6 +128,10 @@ public class NewsCenterPager extends BasePager {
         // 得到左侧菜单
         LeftMenuFragment leftMenuFragment = mainActivity.getLeftMenuFragment();
         leftMenuFragment.setData(data);
+    }
+
+    private NewsCenterPagerBean2 parseJson2(String json) {
+        return new Gson().fromJson(json, NewsCenterPagerBean2.class);
     }
 
     /**
