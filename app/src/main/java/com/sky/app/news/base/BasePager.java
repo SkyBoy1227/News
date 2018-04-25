@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sky.app.news.R;
+import com.sky.app.news.activity.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +67,11 @@ public class BasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.base_pager, null);
         ButterKnife.bind(this, view);
+        ivMenu.setOnClickListener(v -> {
+            MainActivity mainActivity = (MainActivity) context;
+            // 关<->开
+            mainActivity.getSlidingMenu().toggle();
+        });
         return view;
     }
 

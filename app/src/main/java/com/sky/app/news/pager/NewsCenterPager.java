@@ -3,6 +3,7 @@ package com.sky.app.news.pager;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -42,6 +43,7 @@ public class NewsCenterPager extends BasePager {
     public void initData() {
         super.initData();
         LogUtil.e("新闻中心数据被初始化了..");
+        ivMenu.setVisibility(View.VISIBLE);
         // 1.设置标题
         tvTitle.setText("新闻中心");
         // 2.联网请求，得到数据，创建视图
