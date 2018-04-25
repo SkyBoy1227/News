@@ -62,7 +62,7 @@ public class LeftMenuFragment extends BaseFragment {
             // 关<->开
             mainActivity.getSlidingMenu().toggle();
 
-            // 3.切换到对应的详情页面：新闻详情页面，专题详情页面，图组详情页面，互动详情页面
+            // 3.切换到对应的详情页面：新闻详情页面，专题详情页面，组图详情页面，互动详情页面
         });
         return listView;
     }
