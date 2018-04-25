@@ -11,6 +11,7 @@ import com.sky.app.news.R;
 import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BaseFragment;
 import com.sky.app.news.domain.NewsCenterPagerBean;
+import com.sky.app.news.pager.NewsCenterPager;
 import com.sky.app.news.utils.DensityUtil;
 import com.sky.app.news.utils.LogUtil;
 
@@ -63,8 +64,21 @@ public class LeftMenuFragment extends BaseFragment {
             mainActivity.getSlidingMenu().toggle();
 
             // 3.切换到对应的详情页面：新闻详情页面，专题详情页面，组图详情页面，互动详情页面
+            switchPager(prePosition);
         });
         return listView;
+    }
+
+    /**
+     * 根据位置切换不同详情页面
+     *
+     * @param position
+     */
+    private void switchPager(int position) {
+        MainActivity mainActivity = (MainActivity) context;
+        ContentFragment contentFragment = mainActivity.getContentFragment();
+        NewsCenterPager newsCenterPager = contentFragment.getNewsCenterPager();
+        newsCenterPager.switchPager(position);
     }
 
     @Override
@@ -86,6 +100,7 @@ public class LeftMenuFragment extends BaseFragment {
         // 设置适配器
         adapter = new LeftMenuFragmentAdapter();
         listView.setAdapter(adapter);
+        switchPager(prePosition);
     }
 
     class LeftMenuFragmentAdapter extends BaseAdapter {

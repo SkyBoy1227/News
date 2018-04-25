@@ -9,8 +9,13 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BasePager;
+import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean;
 import com.sky.app.news.fragment.LeftMenuFragment;
+import com.sky.app.news.menudetailpager.InteractMenuDetailPager;
+import com.sky.app.news.menudetailpager.NewsMenuDetailPager;
+import com.sky.app.news.menudetailpager.PhotosMenuDetailPager;
+import com.sky.app.news.menudetailpager.TopicMenuDetailPager;
 import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
 
@@ -18,6 +23,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +40,11 @@ public class NewsCenterPager extends BasePager {
      * 左侧菜单对应的数据集合
      */
     private List<NewsCenterPagerBean.DataBean> data;
+
+    /**
+     * 详情页面的集合
+     */
+    private List<MenuDetailBasePager> detailBasePagers;
 
     public NewsCenterPager(Context context) {
         super(context);
@@ -96,6 +107,17 @@ public class NewsCenterPager extends BasePager {
         NewsCenterPagerBean bean = parseJson(json);
         String title = bean.getData().get(0).getChildren().get(0).getTitle();
         LogUtil.e("使用Gson解析json数据成功，title = " + title);
+        // 添加详情页面
+        detailBasePagers = new ArrayList<>();
+        // 新闻详情页面
+        detailBasePagers.add(new NewsMenuDetailPager(context));
+        // 专题详情页面
+        detailBasePagers.add(new TopicMenuDetailPager(context));
+        // 组图详情页面
+        detailBasePagers.add(new PhotosMenuDetailPager(context));
+        // 互动详情页面
+        detailBasePagers.add(new InteractMenuDetailPager(context));
+
         // 将得到的数据传递给左侧菜单
         data = bean.getData();
         MainActivity mainActivity = (MainActivity) context;
@@ -114,5 +136,23 @@ public class NewsCenterPager extends BasePager {
 //        Gson gson = new Gson();
 //        NewsCenterPagerBean bean = gson.fromJson(json, NewsCenterPagerBean.class);
         return new Gson().fromJson(json, NewsCenterPagerBean.class);
+    }
+
+    /**
+     * 根据位置切换详情页面
+     *
+     * @param position
+     */
+    public void switchPager(int position) {
+        // 1.设置标题
+        tvTitle.setText(data.get(position).getTitle());
+        // 2.移除之前内容
+        flContent.removeAllViews();
+
+        // 3.添加新内容
+        MenuDetailBasePager basePager = detailBasePagers.get(position);
+        View rootView = basePager.rootView;
+        basePager.initData();
+        flContent.addView(rootView);
     }
 }
