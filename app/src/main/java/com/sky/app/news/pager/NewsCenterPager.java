@@ -125,10 +125,12 @@ public class NewsCenterPager extends BasePager {
 //        LogUtil.e("使用Gson解析json数据成功，title = " + title);
         String title2 = bean2.getData().get(0).getChildren().get(0).getTitle();
         LogUtil.e("使用Gson解析json数据成功NewsCenterPagerBean2------------------------title2 = " + title2);
+        // 将得到的数据传递给左侧菜单
+        data = bean2.getData();
         // 添加详情页面
         detailBasePagers = new ArrayList<>();
         // 新闻详情页面
-        detailBasePagers.add(new NewsMenuDetailPager(context));
+        detailBasePagers.add(new NewsMenuDetailPager(context,data.get(0)));
         // 专题详情页面
         detailBasePagers.add(new TopicMenuDetailPager(context));
         // 组图详情页面
@@ -136,8 +138,6 @@ public class NewsCenterPager extends BasePager {
         // 互动详情页面
         detailBasePagers.add(new InteractMenuDetailPager(context));
 
-        // 将得到的数据传递给左侧菜单
-        data = bean2.getData();
         MainActivity mainActivity = (MainActivity) context;
         // 得到左侧菜单
         LeftMenuFragment leftMenuFragment = mainActivity.getLeftMenuFragment();
@@ -199,7 +199,7 @@ public class NewsCenterPager extends BasePager {
                             // 添加到集合中
                             childrenDatas.add(childrenData);
 
-                            JSONObject jsonObjectChildren = children.optJSONObject(i);
+                            JSONObject jsonObjectChildren = children.optJSONObject(j);
                             int childrenId = jsonObjectChildren.optInt("id");
                             childrenData.setId(childrenId);
                             String childrenTitle = jsonObjectChildren.optString("title");
