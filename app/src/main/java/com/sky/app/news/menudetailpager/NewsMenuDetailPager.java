@@ -1,13 +1,15 @@
 package com.sky.app.news.menudetailpager;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.Gravity;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.TextView;
 
+import com.sky.app.news.R;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.utils.LogUtil;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created with Android Studio.
@@ -20,7 +22,8 @@ import com.sky.app.news.utils.LogUtil;
  */
 public class NewsMenuDetailPager extends MenuDetailBasePager {
 
-    private TextView textView;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
 
     public NewsMenuDetailPager(Context context) {
         super(context);
@@ -28,17 +31,14 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
 
     @Override
     public View initView() {
-        textView = new TextView(context);
-        textView.setTextSize(24);
-        textView.setTextColor(Color.RED);
-        textView.setGravity(Gravity.CENTER);
-        return textView;
+        View view = View.inflate(context, R.layout.news_menu_detail_pager, null);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void initData() {
         super.initData();
         LogUtil.e("新闻详情页面数据被初始化了..");
-        textView.setText("新闻详情页面内容");
     }
 }
