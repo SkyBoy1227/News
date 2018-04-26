@@ -2,6 +2,7 @@ package com.sky.app.news.pager;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.sky.app.news.menudetailpager.InteractMenuDetailPager;
 import com.sky.app.news.menudetailpager.NewsMenuDetailPager;
 import com.sky.app.news.menudetailpager.PhotosMenuDetailPager;
 import com.sky.app.news.menudetailpager.TopicMenuDetailPager;
+import com.sky.app.news.utils.CacheUtils;
 import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
 
@@ -70,6 +72,12 @@ public class NewsCenterPager extends BasePager {
         flContent.addView(textView);
         // 4.绑定数据
         textView.setText("新闻中心内容");
+
+        // 得到缓存数据
+        String json = CacheUtils.getString(context, Constants.NEWSCENTER_PAGER_URL);
+        if (!TextUtils.isEmpty(json)) {
+            processData(json);
+        }
         getDataFromNet();
     }
 
@@ -82,6 +90,9 @@ public class NewsCenterPager extends BasePager {
             @Override
             public void onSuccess(String result) {
                 LogUtil.e("使用xUtils3联网请求成功==" + result);
+                // 缓存数据
+                CacheUtils.putString(context, Constants.NEWSCENTER_PAGER_URL, result);
+
                 processData(result);
             }
 
