@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.sky.app.news.R;
 import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BaseFragment;
-import com.sky.app.news.domain.NewsCenterPagerBean;
+import com.sky.app.news.domain.NewsCenterPagerBean2;
 import com.sky.app.news.pager.NewsCenterPager;
 import com.sky.app.news.utils.DensityUtil;
 import com.sky.app.news.utils.LogUtil;
@@ -27,7 +27,7 @@ import java.util.List;
  * @version ${VERSION}
  */
 public class LeftMenuFragment extends BaseFragment {
-    private List<NewsCenterPagerBean.DataBean> data;
+    private List<NewsCenterPagerBean2.DetailPagerData> data;
 
     private ListView listView;
 
@@ -92,9 +92,9 @@ public class LeftMenuFragment extends BaseFragment {
      *
      * @param data
      */
-    public void setData(List<NewsCenterPagerBean.DataBean> data) {
+    public void setData(List<NewsCenterPagerBean2.DetailPagerData> data) {
         this.data = data;
-        for (NewsCenterPagerBean.DataBean bean : data) {
+        for (NewsCenterPagerBean2.DetailPagerData bean : data) {
             LogUtil.e("title = " + bean.getTitle());
         }
         // 设置适配器
