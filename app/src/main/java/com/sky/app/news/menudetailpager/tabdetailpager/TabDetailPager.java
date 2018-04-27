@@ -1,13 +1,13 @@
 package com.sky.app.news.menudetailpager.tabdetailpager;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 
+import com.sky.app.news.R;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
+import com.sky.app.news.utils.Constants;
+import com.sky.app.news.utils.LogUtil;
 
 /**
  * Created with Android Studio.
@@ -21,7 +21,7 @@ import com.sky.app.news.domain.NewsCenterPagerBean2;
 public class TabDetailPager extends MenuDetailBasePager {
 
     private NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData;
-    private TextView textView;
+    private String url;
 
     public TabDetailPager(Context context, NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData) {
         super(context);
@@ -30,16 +30,14 @@ public class TabDetailPager extends MenuDetailBasePager {
 
     @Override
     public View initView() {
-        textView = new TextView(context);
-        textView.setTextSize(24);
-        textView.setTextColor(Color.RED);
-        textView.setGravity(Gravity.CENTER);
-        return textView;
+        View view = View.inflate(context, R.layout.tab_detail_pager, null);
+        return view;
     }
 
     @Override
     public void initData() {
         super.initData();
-        textView.setText(childrenData.getTitle());
+        url = Constants.BASE_URL + childrenData.getUrl();
+        LogUtil.e(childrenData.getTitle() + "的联网地址：" + url);
     }
 }
