@@ -2,6 +2,7 @@ package com.sky.app.news.menudetailpager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
 import com.sky.app.news.menudetailpager.tabdetailpager.TabDetailPager;
 import com.sky.app.news.utils.LogUtil;
+import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,8 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
+    @BindView(R.id.tabPageIndicator)
+    TabPageIndicator tabPageIndicator;
 
     /**
      * 页签页面的数据的集合-数据
@@ -66,9 +70,20 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         }
         // 设置ViewPager的适配器
         viewPager.setAdapter(new NewsMenuDetailPagerAdapter());
+
+        // ViewPager和TabPageIndicator关联
+        tabPageIndicator.setViewPager(viewPager);
+
+        // 注意以后监听页面的变化，由TabPageIndicator监听页面的变化
     }
 
     class NewsMenuDetailPagerAdapter extends PagerAdapter {
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return childrenDataList.get(position).getTitle();
+        }
 
         @NonNull
         @Override
