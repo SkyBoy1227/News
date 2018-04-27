@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.sky.app.news.R;
+import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
 import com.sky.app.news.menudetailpager.tabdetailpager.TabDetailPager;
@@ -87,6 +89,41 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         tabPageIndicator.setViewPager(viewPager);
 
         // 注意以后监听页面的变化，由TabPageIndicator监听页面的变化
+        tabPageIndicator.setOnPageChangeListener(new MyOnPageChangeListener());
+    }
+
+    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (position == 0) {
+                // SlidingMenu可以全屏滑动
+                isEnableSlidingMenu(SlidingMenu.TOUCHMODE_FULLSCREEN);
+            } else {
+                // SlidingMenu不可以滑动
+                isEnableSlidingMenu(SlidingMenu.TOUCHMODE_NONE);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    }
+
+    /**
+     * 根据传入的参数设置是否让SlidingMenu可以滑动
+     *
+     * @param touchMode 滑动模式
+     */
+    private void isEnableSlidingMenu(int touchMode) {
+        MainActivity mainActivity = (MainActivity) context;
+        mainActivity.getSlidingMenu().setTouchModeAbove(touchMode);
     }
 
     class NewsMenuDetailPagerAdapter extends PagerAdapter {
