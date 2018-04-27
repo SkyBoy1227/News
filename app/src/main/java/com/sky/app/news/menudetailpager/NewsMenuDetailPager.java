@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.sky.app.news.R;
 import com.sky.app.news.base.MenuDetailBasePager;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created with Android Studio.
@@ -36,6 +38,8 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
     ViewPager viewPager;
     @BindView(R.id.tabPageIndicator)
     TabPageIndicator tabPageIndicator;
+    @BindView(R.id.ib_tab_next)
+    ImageButton ibTabNext;
 
     /**
      * 页签页面的数据的集合-数据
@@ -57,6 +61,14 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         View view = View.inflate(context, R.layout.news_menu_detail_pager, null);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    /**
+     * 设置点击事件
+     */
+    @OnClick(R.id.ib_tab_next)
+    public void next() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
     }
 
     @Override
