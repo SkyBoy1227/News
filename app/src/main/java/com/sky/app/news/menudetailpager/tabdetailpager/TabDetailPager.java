@@ -25,6 +25,7 @@ import com.sky.app.news.utils.CacheUtils;
 import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.DensityUtil;
 import com.sky.app.news.utils.LogUtil;
+import com.sky.app.news.view.HorizontalScrollViewPager;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -43,7 +44,7 @@ import java.util.List;
  */
 public class TabDetailPager extends MenuDetailBasePager {
 
-    private ViewPager viewPager;
+    private HorizontalScrollViewPager viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
     private ListView listView;
@@ -120,6 +121,7 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         // 监听页面的改变，设置红点变化和文本变化
         viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+        viewPager.setCurrentItem(prePosition);
         tvTitle.setText(topnews.get(prePosition).getTitle());
 
         // 准备ListView的集合数据
