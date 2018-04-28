@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.sky.app.news.R;
+import com.sky.app.news.adapter.TabDetailPagerListAdapter;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
 import com.sky.app.news.domain.TabDetailPagerBean;
@@ -64,6 +65,12 @@ public class TabDetailPager extends MenuDetailBasePager {
     private List<TabDetailPagerBean.DataBean.TopnewsBean> topnews;
 
     /**
+     * 新闻列表的数据集合
+     */
+    private List<TabDetailPagerBean.DataBean.NewsBean> news;
+    private TabDetailPagerListAdapter adapter;
+
+    /**
      * 上一次红点的位置
      */
     private int prePosition;
@@ -110,6 +117,13 @@ public class TabDetailPager extends MenuDetailBasePager {
         // 监听页面的改变，设置红点变化和文本变化
         viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
         tvTitle.setText(topnews.get(prePosition).getTitle());
+
+        // 准备ListView的集合数据
+        news = bean.getData().getNews();
+
+        // 设置ListView的适配器
+        adapter = new TabDetailPagerListAdapter(news);
+        listView.setAdapter(adapter);
     }
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
