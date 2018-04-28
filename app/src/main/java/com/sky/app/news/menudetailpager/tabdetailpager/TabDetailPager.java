@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.sky.app.news.R;
 import com.sky.app.news.adapter.TabDetailPagerListAdapter;
@@ -139,10 +142,14 @@ public class TabDetailPager extends MenuDetailBasePager {
             // 1.设置文本
             tvTitle.setText(topnews.get(position).getTitle());
             // 2.对应页面的点高亮-红色
-            // 把之前的变成灰色
-            llPointGroup.getChildAt(prePosition).setEnabled(false);
-            // 把当前设置红色
-            llPointGroup.getChildAt(position).setEnabled(true);
+            for (int i = 0; i < topnews.size(); i++) {
+                View pointView = llPointGroup.getChildAt(i);
+                if (i == position) {
+                    pointView.setEnabled(true);
+                } else {
+                    pointView.setEnabled(false);
+                }
+            }
             prePosition = position;
         }
 
@@ -189,7 +196,21 @@ public class TabDetailPager extends MenuDetailBasePager {
             // 图片请求地址
             String imageUrl = Constants.BASE_URL + topnews.get(position).getTopimage();
             // 联网请求图片
-            x.image().bind(imageView, imageUrl);
+            // 请求图片使用Glide
+            RequestOptions options = new RequestOptions()
+                    // 正在加载中的图片
+                    .placeholder(R.drawable.home_scroll_default)
+                    // 加载失败的图片
+                    .error(R.drawable.home_scroll_default)
+                    // 磁盘缓存策略
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(context)
+                    // 图片地址
+                    .load(imageUrl)
+                    // 参数
+                    .apply(options)
+                    // 需要显示的ImageView控件
+                    .into(imageView);
             return imageView;
         }
 
