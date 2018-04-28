@@ -29,9 +29,6 @@ import org.xutils.x;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created with Android Studio.
  * 描述: 页签详情页面
@@ -43,15 +40,12 @@ import butterknife.ButterKnife;
  */
 public class TabDetailPager extends MenuDetailBasePager {
 
-    @BindView(R.id.view_pager)
-    ViewPager viewPager;
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-    @BindView(R.id.ll_point_group)
-    LinearLayout llPointGroup;
-    @BindView(R.id.listView)
-    ListView listView;
+    private ViewPager viewPager;
+    private TextView tvTitle;
+    private LinearLayout llPointGroup;
+    private ListView listView;
 
+    private TabDetailPagerListAdapter adapter;
     private NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData;
 
     /**
@@ -68,7 +62,6 @@ public class TabDetailPager extends MenuDetailBasePager {
      * 新闻列表的数据集合
      */
     private List<TabDetailPagerBean.DataBean.NewsBean> news;
-    private TabDetailPagerListAdapter adapter;
 
     /**
      * 上一次红点的位置
@@ -83,7 +76,15 @@ public class TabDetailPager extends MenuDetailBasePager {
     @Override
     public View initView() {
         View view = View.inflate(context, R.layout.tab_detail_pager, null);
-        ButterKnife.bind(this, view);
+        listView = view.findViewById(R.id.listView);
+
+        View topNewsView = View.inflate(context, R.layout.top_news, null);
+        viewPager = topNewsView.findViewById(R.id.view_pager);
+        tvTitle = topNewsView.findViewById(R.id.tv_title);
+        llPointGroup = topNewsView.findViewById(R.id.ll_point_group);
+
+        // 把顶部轮播图部分视图，以头的方式添加到ListView中
+        listView.addHeaderView(topNewsView);
         return view;
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Created with Android Studio.
- * 描述: ${DESCRIPTION}
+ * 描述: 新闻页签适配器
  * Date: 2018/4/28
  * Time: 11:00
  *

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Created with Android Studio.
- * 描述: ${DESCRIPTION}
+ * 描述: 通用的BaseAdapter
  * Date: 2018/4/28
  * Time: 10:35
  *

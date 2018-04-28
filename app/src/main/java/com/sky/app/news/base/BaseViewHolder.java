@@ -7,7 +7,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created with Android Studio.
- * 描述: ${DESCRIPTION}
+ * 描述: 通用的ViewHolder
  * Date: 2018/4/28
  * Time: 10:36
  *
