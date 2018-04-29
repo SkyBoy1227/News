@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +25,7 @@ import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.DensityUtil;
 import com.sky.app.news.utils.LogUtil;
 import com.sky.app.news.view.HorizontalScrollViewPager;
+import com.sky.app.news.view.RefreshListView;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -47,7 +47,7 @@ public class TabDetailPager extends MenuDetailBasePager {
     private HorizontalScrollViewPager viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
-    private ListView listView;
+    private RefreshListView listView;
 
     private TabDetailPagerListAdapter adapter;
     private NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData;
