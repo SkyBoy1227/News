@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.sky.app.news.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -69,6 +72,7 @@ public class RefreshListView extends ListView {
 
     private RotateAnimation downAnimation;
     private RotateAnimation upAnimation;
+    private OnRefreshListener mOnRefreshListener;
 
     public RefreshListView(Context context) {
         this(context, null);
@@ -163,6 +167,9 @@ public class RefreshListView extends ListView {
                     llPullDownRefresh.setPadding(0, 0, 0, 0);
 
                     // 回调接口
+                    if (mOnRefreshListener != null) {
+                        mOnRefreshListener.onPullDownRefresh();
+                    }
                 }
                 break;
             default:
@@ -196,5 +203,49 @@ public class RefreshListView extends ListView {
             default:
                 break;
         }
+    }
+
+    /**
+     * 当联网成功和失败的时候回调该方法
+     * 用户刷新状态的还原
+     *
+     * @param success
+     */
+    public void onRefreshFinish(boolean success) {
+        tvStatus.setText("下拉刷新...");
+        currentStatus = PULL_DOWN_REFRESH;
+        ivArrow.clearAnimation();
+        pbStatus.setVisibility(View.GONE);
+        ivArrow.setVisibility(View.VISIBLE);
+        // 隐藏下拉刷新控件
+        llPullDownRefresh.setPadding(0, -pullDownRefreshHeight, 0, 0);
+        if (success) {
+            // 设置最新更新时间
+            tvTime.setText("上次更新时间：" + getSystemTime());
+        }
+    }
+
+    /**
+     * 得到当前Android系统的时间
+     *
+     * @return
+     */
+    private String getSystemTime() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(new Date());
+    }
+
+    /**
+     * 监听控件的刷新
+     */
+    public interface OnRefreshListener {
+        /**
+         * 当下拉刷新的时候回调这个方法
+         */
+        void onPullDownRefresh();
+    }
+
+    public void setOnRefreshListener(OnRefreshListener listener) {
+        this.mOnRefreshListener = listener;
     }
 }

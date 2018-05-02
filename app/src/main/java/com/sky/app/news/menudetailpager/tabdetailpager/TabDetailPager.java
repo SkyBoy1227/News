@@ -89,6 +89,11 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         // 把顶部轮播图部分视图，以头的方式添加到ListView中
         listView.addHeaderView(topNewsView);
+
+        // 设置监听下拉刷新
+        listView.setOnRefreshListener(() -> {
+            getDataFromNet();
+        });
         return view;
     }
 
@@ -247,6 +252,7 @@ public class TabDetailPager extends MenuDetailBasePager {
      */
     private void getDataFromNet() {
         RequestParams params = new RequestParams(url);
+        params.setConnectTimeout(4000);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -254,11 +260,16 @@ public class TabDetailPager extends MenuDetailBasePager {
                 CacheUtils.putString(context, url, result);
                 LogUtil.e(childrenData.getTitle() + "-页面数据请求成功==" + result);
                 processData(result);
+
+                // 隐藏下拉刷新控件-重新显示数据，更新时间
+                listView.onRefreshFinish(true);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 LogUtil.e(childrenData.getTitle() + "-页面数据请求失败==" + ex.getMessage());
+                // 隐藏下拉刷新控件 - 不更新时间，只是隐藏
+                listView.onRefreshFinish(false);
             }
 
             @Override
