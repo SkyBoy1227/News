@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -74,6 +75,21 @@ public class RefreshListView extends ListView {
     private RotateAnimation upAnimation;
     private OnRefreshListener mOnRefreshListener;
 
+    /**
+     * 加载更多控件
+     */
+    private View footerView;
+
+    /**
+     * 加载更多控件的高
+     */
+    private int footerViewHeight;
+
+    /**
+     * 是否已经加载更多
+     */
+    private boolean isLoadMore;
+
     public RefreshListView(Context context) {
         this(context, null);
     }
@@ -86,6 +102,48 @@ public class RefreshListView extends ListView {
         super(context, attrs, defStyleAttr);
         initHeaderView(context);
         initAnimation();
+        initFooterView(context);
+    }
+
+    /**
+     * 初始化ListView的底部
+     */
+    private void initFooterView(Context context) {
+        footerView = View.inflate(context, R.layout.refresh_footer, null);
+        footerView.measure(0, 0);
+        footerViewHeight = footerView.getMeasuredHeight();
+        footerView.setPadding(0, -footerViewHeight, 0, 0);
+        // ListView添加footer
+        addFooterView(footerView);
+
+        // 监听ListView的滚动
+        setOnScrollListener(new MyOnScrollListener());
+    }
+
+    class MyOnScrollListener implements OnScrollListener {
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            // 当静止或者惯性滚动的时候
+            if (scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_FLING) {
+                // 并且是最后一条可见
+                if (getLastVisiblePosition() >= getCount() - 1) {
+                    // 1.显示加载更多布局
+                    footerView.setPadding(8, 8, 8, 8);
+                    // 2.状态改变
+                    isLoadMore = true;
+                    // 3.回调接口
+                    if (mOnRefreshListener != null) {
+                        mOnRefreshListener.onLoadMore();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+        }
     }
 
     /**
@@ -102,7 +160,7 @@ public class RefreshListView extends ListView {
     }
 
     /**
-     * 初始化头部
+     * 初始化ListView的头部
      *
      * @param context
      */
@@ -243,6 +301,11 @@ public class RefreshListView extends ListView {
          * 当下拉刷新的时候回调这个方法
          */
         void onPullDownRefresh();
+
+        /**
+         * 当加载更多的时候回调这个方法
+         */
+        public void onLoadMore();
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {

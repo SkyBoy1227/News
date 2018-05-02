@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -91,10 +92,21 @@ public class TabDetailPager extends MenuDetailBasePager {
         listView.addHeaderView(topNewsView);
 
         // 设置监听下拉刷新
-        listView.setOnRefreshListener(() -> {
-            getDataFromNet();
-        });
+        listView.setOnRefreshListener(new MyOnRefreshListener());
         return view;
+    }
+
+    class MyOnRefreshListener implements RefreshListView.OnRefreshListener {
+
+        @Override
+        public void onPullDownRefresh() {
+            getDataFromNet();
+        }
+
+        @Override
+        public void onLoadMore() {
+            Toast.makeText(context, "加载更多被回调了", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
