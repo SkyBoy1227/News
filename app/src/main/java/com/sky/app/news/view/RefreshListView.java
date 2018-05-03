@@ -270,16 +270,24 @@ public class RefreshListView extends ListView {
      * @param success
      */
     public void onRefreshFinish(boolean success) {
-        tvStatus.setText("下拉刷新...");
-        currentStatus = PULL_DOWN_REFRESH;
-        ivArrow.clearAnimation();
-        pbStatus.setVisibility(View.GONE);
-        ivArrow.setVisibility(View.VISIBLE);
-        // 隐藏下拉刷新控件
-        llPullDownRefresh.setPadding(0, -pullDownRefreshHeight, 0, 0);
-        if (success) {
-            // 设置最新更新时间
-            tvTime.setText("上次更新时间：" + getSystemTime());
+        if (isLoadMore) {
+            // 加载更多
+            isLoadMore = false;
+            // 隐藏加载更多布局
+            footerView.setPadding(0, -footerViewHeight, 0, 0);
+        } else {
+            // 下拉刷新
+            tvStatus.setText("下拉刷新...");
+            currentStatus = PULL_DOWN_REFRESH;
+            ivArrow.clearAnimation();
+            pbStatus.setVisibility(View.GONE);
+            ivArrow.setVisibility(View.VISIBLE);
+            // 隐藏下拉刷新控件
+            llPullDownRefresh.setPadding(0, -pullDownRefreshHeight, 0, 0);
+            if (success) {
+                // 设置最新更新时间
+                tvTime.setText("上次更新时间：" + getSystemTime());
+            }
         }
     }
 
@@ -308,6 +316,11 @@ public class RefreshListView extends ListView {
         public void onLoadMore();
     }
 
+    /**
+     * 设置监听刷新，由外界设置
+     *
+     * @param listener
+     */
     public void setOnRefreshListener(OnRefreshListener listener) {
         this.mOnRefreshListener = listener;
     }

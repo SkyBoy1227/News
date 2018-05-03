@@ -73,6 +73,16 @@ public class TabDetailPager extends MenuDetailBasePager {
      */
     private int prePosition;
 
+    /**
+     * 是否加载更多
+     */
+    private boolean isLoadMore;
+
+    /**
+     * 加载更多联网地址
+     */
+    private String moreUrl;
+
     public TabDetailPager(Context context, NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData) {
         super(context);
         this.childrenData = childrenData;
@@ -105,8 +115,48 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         @Override
         public void onLoadMore() {
-            Toast.makeText(context, "加载更多被回调了", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "加载更多被回调了", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(moreUrl)) {
+                // 没有更多数据
+                Toast.makeText(context, "没有更多数据了", Toast.LENGTH_SHORT).show();
+                listView.onRefreshFinish(false);
+            } else {
+                getMoreDataFromNet();
+            }
         }
+    }
+
+    /**
+     * 联网请求更多数据
+     */
+    private void getMoreDataFromNet() {
+        RequestParams params = new RequestParams(moreUrl);
+        params.setConnectTimeout(4000);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtil.e("加载更多数据成功==" + result);
+                listView.onRefreshFinish(false);
+                isLoadMore = true;
+                processData(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                LogUtil.e("加载更多数据失败onError==" + ex.getMessage());
+                listView.onRefreshFinish(false);
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                LogUtil.e("加载更多数据失败onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                LogUtil.e("加载更多数据失败onFinished==");
+            }
+        });
     }
 
     @Override
@@ -130,23 +180,38 @@ public class TabDetailPager extends MenuDetailBasePager {
     private void processData(String json) {
         TabDetailPagerBean bean = parsedJson(json);
         LogUtil.e(childrenData.getTitle() + "解析成功==" + bean.getData().getNews().get(0).getTitle());
-        topnews = bean.getData().getTopnews();
-        // 设置ViewPager的适配器
-        viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
+        if (TextUtils.isEmpty(bean.getData().getMore())) {
+            moreUrl = "";
+        } else {
+            moreUrl = Constants.BASE_URL + bean.getData().getMore();
+        }
+        if (!isLoadMore) {
+            // 默认
+            topnews = bean.getData().getTopnews();
+            // 设置ViewPager的适配器
+            viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
 
-        addPoint();
+            addPoint();
 
-        // 监听页面的改变，设置红点变化和文本变化
-        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
-        viewPager.setCurrentItem(prePosition);
-        tvTitle.setText(topnews.get(prePosition).getTitle());
+            // 监听页面的改变，设置红点变化和文本变化
+            viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+            viewPager.setCurrentItem(prePosition);
+            tvTitle.setText(topnews.get(prePosition).getTitle());
 
-        // 准备ListView的集合数据
-        news = bean.getData().getNews();
+            // 准备ListView的集合数据
+            news = bean.getData().getNews();
 
-        // 设置ListView的适配器
-        adapter = new TabDetailPagerListAdapter(news);
-        listView.setAdapter(adapter);
+            // 设置ListView的适配器
+            adapter = new TabDetailPagerListAdapter(news);
+            listView.setAdapter(adapter);
+        } else {
+            // 加载更多
+            isLoadMore = false;
+            // 添加到原来的集合中
+            news.addAll(bean.getData().getNews());
+            // 刷新适配器
+            adapter.notifyDataSetChanged();
+        }
     }
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
