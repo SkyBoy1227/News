@@ -26,7 +26,7 @@ import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.DensityUtil;
 import com.sky.app.news.utils.LogUtil;
 import com.sky.app.news.view.HorizontalScrollViewPager;
-import com.sky.app.news.view.RefreshListView;
+import com.sky.lib.refreshlistview.RefreshListView;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;

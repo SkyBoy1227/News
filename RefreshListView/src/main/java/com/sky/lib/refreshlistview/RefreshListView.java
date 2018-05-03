@@ -1,4 +1,4 @@
-package com.sky.app.news.view;
+package com.sky.lib.refreshlistview;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,13 +13,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.sky.app.news.R;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created with Android Studio.
@@ -46,19 +41,14 @@ public class RefreshListView extends ListView {
      */
     private static final int REFRESHING = 3;
 
-    @BindView(R.id.iv_arrow)
-    ImageView ivArrow;
-    @BindView(R.id.pb_status)
-    ProgressBar pbStatus;
-    @BindView(R.id.tv_status)
-    TextView tvStatus;
-    @BindView(R.id.tv_time)
-    TextView tvTime;
+    private ImageView ivArrow;
+    private ProgressBar pbStatus;
+    private TextView tvStatus;
+    private TextView tvTime;
     /**
      * 下拉刷新控件
      */
-    @BindView(R.id.ll_pull_down_refresh)
-    LinearLayout llPullDownRefresh;
+    private LinearLayout llPullDownRefresh;
 
     /**
      * 下拉刷新和和顶部轮播图
@@ -193,7 +183,13 @@ public class RefreshListView extends ListView {
      */
     private void initHeaderView(Context context) {
         headerView = (LinearLayout) View.inflate(context, R.layout.refresh_header, null);
-        ButterKnife.bind(this, headerView);
+        // 下拉刷新控件
+        llPullDownRefresh = headerView.findViewById(R.id.ll_pull_down_refresh);
+        ivArrow = headerView.findViewById(R.id.iv_arrow);
+        pbStatus = headerView.findViewById(R.id.pb_status);
+        tvStatus = headerView.findViewById(R.id.tv_status);
+        tvTime = headerView.findViewById(R.id.tv_time);
+
         // 测量
         llPullDownRefresh.measure(0, 0);
         pullDownRefreshHeight = llPullDownRefresh.getMeasuredHeight();
