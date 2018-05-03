@@ -55,10 +55,15 @@ public class RefreshListView extends ListView {
     @BindView(R.id.tv_time)
     TextView tvTime;
     /**
-     * 下拉刷新和和顶部轮播图（先不加入）
+     * 下拉刷新控件
      */
     @BindView(R.id.ll_pull_down_refresh)
     LinearLayout llPullDownRefresh;
+
+    /**
+     * 下拉刷新和和顶部轮播图
+     */
+    private LinearLayout headerView;
 
     /**
      * 下拉刷新控件的高
@@ -90,6 +95,16 @@ public class RefreshListView extends ListView {
      */
     private boolean isLoadMore;
 
+    /**
+     * 顶部轮播图部分
+     */
+    private View topNewsView;
+
+    /**
+     * ListView在Y轴上的坐标
+     */
+    private int listViewOnScreenY = -1;
+
     public RefreshListView(Context context) {
         this(context, null);
     }
@@ -118,6 +133,18 @@ public class RefreshListView extends ListView {
 
         // 监听ListView的滚动
         setOnScrollListener(new MyOnScrollListener());
+    }
+
+    /**
+     * 添加顶部轮播图
+     *
+     * @param topNewsView
+     */
+    public void addTopNewsView(View topNewsView) {
+        if (topNewsView != null) {
+            this.topNewsView = topNewsView;
+            headerView.addView(topNewsView);
+        }
     }
 
     class MyOnScrollListener implements OnScrollListener {
@@ -165,7 +192,7 @@ public class RefreshListView extends ListView {
      * @param context
      */
     private void initHeaderView(Context context) {
-        View headerView = View.inflate(context, R.layout.refresh_header, null);
+        headerView = (LinearLayout) View.inflate(context, R.layout.refresh_header, null);
         ButterKnife.bind(this, headerView);
         // 测量
         llPullDownRefresh.measure(0, 0);
@@ -188,6 +215,14 @@ public class RefreshListView extends ListView {
                 if (startY == -1) {
                     startY = ev.getY();
                 }
+
+                boolean isDisplayTopNews = isDisplayTopNews();
+                if (!isDisplayTopNews) {
+                    // 加载更多
+                    break;
+                }
+
+                // 如果是正在刷新，就不让再刷新了
                 if (currentStatus == REFRESHING) {
                     break;
                 }
@@ -234,6 +269,29 @@ public class RefreshListView extends ListView {
                 break;
         }
         return super.onTouchEvent(ev);
+    }
+
+    /**
+     * 判断是否完全显示顶部轮播图
+     * 当ListView在屏幕上的Y轴坐标小于或者等于顶部轮播图在Y轴的坐标的时候，顶部轮播图完全显示
+     *
+     * @return
+     */
+    private boolean isDisplayTopNews() {
+        if (topNewsView != null) {
+            // 1.得到ListView在屏幕上的坐标
+            int[] location = new int[2];
+            if (listViewOnScreenY == -1) {
+                getLocationOnScreen(location);
+                listViewOnScreenY = location[1];
+            }
+            // 2.得到顶部轮播图在屏幕上的坐标
+            topNewsView.getLocationOnScreen(location);
+            int topNewsViewOnScreenY = location[1];
+            return listViewOnScreenY <= topNewsViewOnScreenY;
+        } else {
+            return true;
+        }
     }
 
     /**

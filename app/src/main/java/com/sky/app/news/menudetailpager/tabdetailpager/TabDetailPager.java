@@ -99,7 +99,8 @@ public class TabDetailPager extends MenuDetailBasePager {
         llPointGroup = topNewsView.findViewById(R.id.ll_point_group);
 
         // 把顶部轮播图部分视图，以头的方式添加到ListView中
-        listView.addHeaderView(topNewsView);
+//        listView.addHeaderView(topNewsView);
+        listView.addTopNewsView(topNewsView);
 
         // 设置监听下拉刷新
         listView.setOnRefreshListener(new MyOnRefreshListener());
