@@ -37,14 +37,13 @@ import java.util.List;
 /**
  * Created with Android Studio.
  * 描述: 页签详情页面
- * Date: 2018/4/26
- * Time: 15:05
+ * Date: 2018/5/4
+ * Time: 10:22
  *
  * @author 晏琦云
  * @version ${VERSION}
  */
-public class TabDetailPager extends MenuDetailBasePager {
-
+public class TopicDetailPager extends MenuDetailBasePager {
     private HorizontalScrollViewPager viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
@@ -83,7 +82,7 @@ public class TabDetailPager extends MenuDetailBasePager {
      */
     private String moreUrl;
 
-    public TabDetailPager(Context context, NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData) {
+    public TopicDetailPager(Context context, NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData) {
         super(context);
         this.childrenData = childrenData;
     }
@@ -103,7 +102,7 @@ public class TabDetailPager extends MenuDetailBasePager {
         listView.addTopNewsView(topNewsView);
 
         // 设置监听下拉刷新
-        listView.setOnRefreshListener(new MyOnRefreshListener());
+        listView.setOnRefreshListener(new TopicDetailPager.MyOnRefreshListener());
         return view;
     }
 
@@ -190,12 +189,12 @@ public class TabDetailPager extends MenuDetailBasePager {
             // 默认
             topnews = bean.getData().getTopnews();
             // 设置ViewPager的适配器
-            viewPager.setAdapter(new TabDetailPagerTopNewsAdapter());
+            viewPager.setAdapter(new TopicDetailPager.TabDetailPagerTopNewsAdapter());
 
             addPoint();
 
             // 监听页面的改变，设置红点变化和文本变化
-            viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+            viewPager.addOnPageChangeListener(new TopicDetailPager.MyOnPageChangeListener());
             viewPager.setCurrentItem(prePosition);
             tvTitle.setText(topnews.get(prePosition).getTitle());
 
