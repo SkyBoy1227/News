@@ -1,6 +1,7 @@
 package com.sky.app.news.viewholder;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,6 +11,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.sky.app.news.R;
 import com.sky.app.news.base.BaseViewHolder;
 import com.sky.app.news.domain.TabDetailPagerBean;
+import com.sky.app.news.menudetailpager.tabdetailpager.TabDetailPager;
+import com.sky.app.news.utils.CacheUtils;
 import com.sky.app.news.utils.Constants;
 
 import org.xutils.common.util.DensityUtil;
@@ -79,6 +82,14 @@ public class TabDetailPagerListViewHolder extends BaseViewHolder<TabDetailPagerB
         tvTitle.setText(data.getTitle());
         // 设置更新时间
         tvTime.setText(data.getPubdate());
+        String idArray = CacheUtils.getString(context, TabDetailPager.READ_ID_ARRAY);
+        if (idArray.contains(String.valueOf(data.getId()))) {
+            // 设置灰色
+            tvTitle.setTextColor(Color.GRAY);
+        } else {
+            // 设置黑色
+            tvTitle.setTextColor(Color.BLACK);
+        }
     }
 
     @Override

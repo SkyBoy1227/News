@@ -45,6 +45,7 @@ import java.util.List;
  */
 public class TabDetailPager extends MenuDetailBasePager {
 
+    public static final String READ_ID_ARRAY = "read_id_array";
     private HorizontalScrollViewPager viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
@@ -104,6 +105,21 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         // 设置监听下拉刷新
         listView.setOnRefreshListener(new MyOnRefreshListener());
+
+        // 设置ListView的item的点击监听
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            int realPosition = position - 1;
+            TabDetailPagerBean.DataBean.NewsBean bean = news.get(realPosition);
+            Toast.makeText(context, "newsBean==id==" + bean.getId() + ",newsBean_title==" + bean.getTitle(), Toast.LENGTH_SHORT).show();
+            // 1.取出保存的id的集合
+            String idArray = CacheUtils.getString(context, READ_ID_ARRAY);
+            // 2.判断是否存在，如果不存在，才保存，并且刷新适配器
+            if (!idArray.contains(String.valueOf(bean.getId()))) {
+                CacheUtils.putString(context, READ_ID_ARRAY, idArray + bean.getId() + ",");
+                // 刷新适配器
+                adapter.notifyDataSetChanged();
+            }
+        });
         return view;
     }
 
