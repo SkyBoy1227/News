@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.extras.SoundPullEventListener;
 import com.sky.app.news.R;
 import com.sky.app.news.adapter.TabDetailPagerListAdapter;
 import com.sky.app.news.base.MenuDetailBasePager;
@@ -26,7 +30,6 @@ import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.DensityUtil;
 import com.sky.app.news.utils.LogUtil;
 import com.sky.app.news.view.HorizontalScrollViewPager;
-import com.sky.lib.refreshlistview.RefreshListView;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -47,7 +50,8 @@ public class TopicDetailPager extends MenuDetailBasePager {
     private HorizontalScrollViewPager viewPager;
     private TextView tvTitle;
     private LinearLayout llPointGroup;
-    private RefreshListView listView;
+    private PullToRefreshListView mPullRefreshListView;
+    private ListView listView;
 
     private TabDetailPagerListAdapter adapter;
     private NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData;
@@ -89,8 +93,9 @@ public class TopicDetailPager extends MenuDetailBasePager {
 
     @Override
     public View initView() {
-        View view = View.inflate(context, R.layout.tab_detail_pager, null);
-        listView = view.findViewById(R.id.listView);
+        View view = View.inflate(context, R.layout.topic_detail_pager, null);
+        mPullRefreshListView = view.findViewById(R.id.pull_refresh_list);
+        listView = mPullRefreshListView.getRefreshableView();
 
         View topNewsView = View.inflate(context, R.layout.top_news, null);
         viewPager = topNewsView.findViewById(R.id.view_pager);
@@ -98,33 +103,59 @@ public class TopicDetailPager extends MenuDetailBasePager {
         llPointGroup = topNewsView.findViewById(R.id.ll_point_group);
 
         // 把顶部轮播图部分视图，以头的方式添加到ListView中
-//        listView.addHeaderView(topNewsView);
-        listView.addTopNewsView(topNewsView);
+        listView.addHeaderView(topNewsView);
+//        listView.addTopNewsView(topNewsView);
 
         // 设置监听下拉刷新
-        listView.setOnRefreshListener(new TopicDetailPager.MyOnRefreshListener());
+//        listView.setOnRefreshListener(new TopicDetailPager.MyOnRefreshListener());
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                getDataFromNet();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                if (TextUtils.isEmpty(moreUrl)) {
+                    // 没有更多数据
+                    Toast.makeText(context, "没有更多数据了", Toast.LENGTH_SHORT).show();
+//                    listView.onRefreshFinish(false);
+                    mPullRefreshListView.onRefreshComplete();
+                } else {
+                    getMoreDataFromNet();
+                }
+            }
+        });
+        /**
+         * Add Sound Event Listener
+         */
+        SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<>(context);
+        soundListener.addSoundEvent(PullToRefreshBase.State.PULL_TO_REFRESH, R.raw.pull_event);
+        soundListener.addSoundEvent(PullToRefreshBase.State.RESET, R.raw.reset_sound);
+        soundListener.addSoundEvent(PullToRefreshBase.State.REFRESHING, R.raw.refreshing_sound);
+        mPullRefreshListView.setOnPullEventListener(soundListener);
         return view;
     }
 
-    class MyOnRefreshListener implements RefreshListView.OnRefreshListener {
-
-        @Override
-        public void onPullDownRefresh() {
-            getDataFromNet();
-        }
-
-        @Override
-        public void onLoadMore() {
-//            Toast.makeText(context, "加载更多被回调了", Toast.LENGTH_SHORT).show();
-            if (TextUtils.isEmpty(moreUrl)) {
-                // 没有更多数据
-                Toast.makeText(context, "没有更多数据了", Toast.LENGTH_SHORT).show();
-                listView.onRefreshFinish(false);
-            } else {
-                getMoreDataFromNet();
-            }
-        }
-    }
+//    class MyOnRefreshListener implements RefreshListView.OnRefreshListener {
+//
+//        @Override
+//        public void onPullDownRefresh() {
+//            getDataFromNet();
+//        }
+//
+//        @Override
+//        public void onLoadMore() {
+////            Toast.makeText(context, "加载更多被回调了", Toast.LENGTH_SHORT).show();
+//            if (TextUtils.isEmpty(moreUrl)) {
+//                // 没有更多数据
+//                Toast.makeText(context, "没有更多数据了", Toast.LENGTH_SHORT).show();
+//                listView.onRefreshFinish(false);
+//            } else {
+//                getMoreDataFromNet();
+//            }
+//        }
+//    }
 
     /**
      * 联网请求更多数据
@@ -136,7 +167,8 @@ public class TopicDetailPager extends MenuDetailBasePager {
             @Override
             public void onSuccess(String result) {
                 LogUtil.e("加载更多数据成功==" + result);
-                listView.onRefreshFinish(false);
+//                listView.onRefreshFinish(false);
+                mPullRefreshListView.onRefreshComplete();
                 isLoadMore = true;
                 processData(result);
             }
@@ -144,7 +176,8 @@ public class TopicDetailPager extends MenuDetailBasePager {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 LogUtil.e("加载更多数据失败onError==" + ex.getMessage());
-                listView.onRefreshFinish(false);
+//                listView.onRefreshFinish(false);
+                mPullRefreshListView.onRefreshComplete();
             }
 
             @Override
@@ -339,14 +372,16 @@ public class TopicDetailPager extends MenuDetailBasePager {
                 processData(result);
 
                 // 隐藏下拉刷新控件-重新显示数据，更新时间
-                listView.onRefreshFinish(true);
+//                listView.onRefreshFinish(true);
+                mPullRefreshListView.onRefreshComplete();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 LogUtil.e(childrenData.getTitle() + "-页面数据请求失败==" + ex.getMessage());
                 // 隐藏下拉刷新控件 - 不更新时间，只是隐藏
-                listView.onRefreshFinish(false);
+//                listView.onRefreshFinish(false);
+                mPullRefreshListView.onRefreshComplete();
             }
 
             @Override
