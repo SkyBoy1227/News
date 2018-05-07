@@ -113,6 +113,7 @@ public class TabDetailPager extends MenuDetailBasePager {
             int realPosition = position - 1;
             TabDetailPagerBean.DataBean.NewsBean bean = news.get(realPosition);
 //            Toast.makeText(context, "newsBean==id==" + bean.getId() + ",newsBean_title==" + bean.getTitle(), Toast.LENGTH_SHORT).show();
+            LogUtil.e("newsBean==id==" + bean.getId() + ",newsBean_title==" + bean.getTitle() + ",url====" + bean.getUrl());
             // 1.取出保存的id的集合
             String idArray = CacheUtils.getString(context, READ_ID_ARRAY);
             // 2.判断是否存在，如果不存在，才保存，并且刷新适配器
@@ -124,6 +125,7 @@ public class TabDetailPager extends MenuDetailBasePager {
 
             // 跳转到新闻浏览页面
             Intent intent = new Intent(context, NewsDetailActivity.class);
+            intent.putExtra("url", Constants.BASE_URL + bean.getUrl());
             context.startActivity(intent);
         });
         return view;

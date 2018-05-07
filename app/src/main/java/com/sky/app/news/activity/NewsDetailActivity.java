@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ public class NewsDetailActivity extends AppCompatActivity {
     WebView webview;
     @BindView(R.id.pb_loading)
     ProgressBar pbLoading;
+    private String url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +48,29 @@ public class NewsDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news_detail);
         ButterKnife.bind(this);
         initView();
+        getData();
+    }
+
+    private void getData() {
+        url = getIntent().getStringExtra("url");
+
+        WebSettings settings = webview.getSettings();
+        // 设置支持javaScript
+        settings.setJavaScriptEnabled(true);
+        // 设置双击变大变小
+        settings.setUseWideViewPort(true);
+        // 增加缩放按钮
+        settings.setBuiltInZoomControls(true);
+        // 不让当前网页跳转到系统的浏览器中
+        webview.setWebViewClient(new WebViewClient() {
+            // 当加载页面完成的时候回调
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                pbLoading.setVisibility(View.GONE);
+            }
+        });
+        webview.loadUrl(url);
     }
 
     private void initView() {
