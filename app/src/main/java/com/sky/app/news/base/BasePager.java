@@ -44,8 +44,8 @@ public class BasePager {
     /**
      * 侧滑菜单按钮
      */
-    @BindView(R.id.iv_menu)
-    public ImageButton ivMenu;
+    @BindView(R.id.ib_menu)
+    public ImageButton ibMenu;
 
     /**
      * 加载各个子页面
@@ -67,7 +67,7 @@ public class BasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.base_pager, null);
         ButterKnife.bind(this, view);
-        ivMenu.setOnClickListener(v -> {
+        ibMenu.setOnClickListener(v -> {
             MainActivity mainActivity = (MainActivity) context;
             // 关<->开
             mainActivity.getSlidingMenu().toggle();

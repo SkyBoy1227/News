@@ -1,6 +1,7 @@
 package com.sky.app.news.menudetailpager.tabdetailpager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.sky.app.news.R;
+import com.sky.app.news.activity.NewsDetailActivity;
 import com.sky.app.news.adapter.TabDetailPagerListAdapter;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
@@ -110,7 +112,7 @@ public class TabDetailPager extends MenuDetailBasePager {
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             int realPosition = position - 1;
             TabDetailPagerBean.DataBean.NewsBean bean = news.get(realPosition);
-            Toast.makeText(context, "newsBean==id==" + bean.getId() + ",newsBean_title==" + bean.getTitle(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "newsBean==id==" + bean.getId() + ",newsBean_title==" + bean.getTitle(), Toast.LENGTH_SHORT).show();
             // 1.取出保存的id的集合
             String idArray = CacheUtils.getString(context, READ_ID_ARRAY);
             // 2.判断是否存在，如果不存在，才保存，并且刷新适配器
@@ -119,6 +121,10 @@ public class TabDetailPager extends MenuDetailBasePager {
                 // 刷新适配器
                 adapter.notifyDataSetChanged();
             }
+
+            // 跳转到新闻浏览页面
+            Intent intent = new Intent(context, NewsDetailActivity.class);
+            context.startActivity(intent);
         });
         return view;
     }

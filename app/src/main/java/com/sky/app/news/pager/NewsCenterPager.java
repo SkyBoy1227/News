@@ -60,7 +60,7 @@ public class NewsCenterPager extends BasePager {
     public void initData() {
         super.initData();
         LogUtil.e("新闻中心数据被初始化了..");
-        ivMenu.setVisibility(View.VISIBLE);
+        ibMenu.setVisibility(View.VISIBLE);
         // 1.设置标题
         tvTitle.setText("新闻中心");
         // 2.联网请求，得到数据，创建视图
