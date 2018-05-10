@@ -2,10 +2,13 @@ package com.sky.app.news.menudetailpager.tabdetailpager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -85,6 +88,12 @@ public class TabDetailPager extends MenuDetailBasePager {
      * 下一页的联网地址
      */
     private String moreUrl;
+    private InternalHandler handler;
+
+    /**
+     * 是否拖拽顶部轮播图
+     */
+    private boolean isDragging;
 
     public TabDetailPager(Context context, NewsCenterPagerBean2.DetailPagerData.ChildrenData childrenData) {
         super(context);
@@ -237,6 +246,25 @@ public class TabDetailPager extends MenuDetailBasePager {
             // 刷新适配器
             adapter.notifyDataSetChanged();
         }
+
+        // 发消息每隔4000切换一次ViewPager页面
+        if (handler == null) {
+            handler = new InternalHandler();
+        }
+        // 把消息队列所有的消息和回调移除
+        handler.removeCallbacksAndMessages(null);
+        handler.sendEmptyMessageDelayed(0, 4000);
+    }
+
+    class InternalHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            // 切换ViewPager的下一个页面
+            int item = (viewPager.getCurrentItem() + 1) % topnews.size();
+            viewPager.setCurrentItem(item);
+            handler.sendEmptyMessageDelayed(0, 4000);
+        }
     }
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
@@ -264,7 +292,24 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         @Override
         public void onPageScrollStateChanged(int state) {
-
+            if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+                // 拖拽
+                LogUtil.e("拖拽");
+                isDragging = true;
+                handler.removeCallbacksAndMessages(null);
+            } else if (state == ViewPager.SCROLL_STATE_SETTLING && isDragging) {
+                // 惯性
+                LogUtil.e("惯性");
+                isDragging = false;
+                handler.removeCallbacksAndMessages(null);
+                handler.sendEmptyMessageDelayed(0, 4000);
+            } else if (state == ViewPager.SCROLL_STATE_IDLE && isDragging) {
+                // 静止状态
+                LogUtil.e("静止状态");
+                isDragging = false;
+                handler.removeCallbacksAndMessages(null);
+                handler.sendEmptyMessageDelayed(0, 4000);
+            }
         }
     }
 
@@ -320,6 +365,25 @@ public class TabDetailPager extends MenuDetailBasePager {
                     .apply(options)
                     // 需要显示的ImageView控件
                     .into(imageView);
+
+            imageView.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // 按下
+                        LogUtil.e("按下");
+                        handler.removeCallbacksAndMessages(null);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        // 离开
+                        LogUtil.e("离开");
+                        handler.removeCallbacksAndMessages(null);
+                        handler.sendEmptyMessageDelayed(0, 4000);
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            });
             return imageView;
         }
 
