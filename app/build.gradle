@@ -39,4 +39,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     implementation project(':RefreshListView')
     implementation project(':PullToRefresh_library')
+    implementation 'com.android.volley:volley:1.0.0'
 }

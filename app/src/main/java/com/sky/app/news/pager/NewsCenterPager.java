@@ -7,6 +7,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BasePager;
@@ -29,6 +35,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +85,38 @@ public class NewsCenterPager extends BasePager {
         if (!TextUtils.isEmpty(json)) {
             processData(json);
         }
-        getDataFromNet();
+//        getDataFromNet();
+        getDataFromNetByVolley();
+    }
+
+    /**
+     * 使用Volley联网请求数据
+     */
+    private void getDataFromNetByVolley() {
+        // 请求队列
+        RequestQueue queue = Volley.newRequestQueue(context);
+        // String请求
+        StringRequest request = new StringRequest(StringRequest.Method.GET,
+                Constants.NEWSCENTER_PAGER_URL, response -> {
+            LogUtil.e("使用Volley联网请求成功==" + response);
+            // 缓存数据
+            CacheUtils.putString(context, Constants.NEWSCENTER_PAGER_URL, response);
+
+            processData(response);
+        }, error -> LogUtil.e("使用Volley联网请求失败==" + error.getMessage())) {
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    String parsed = new String(response.data, "UTF-8");
+                    return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+        // 添加到队列
+        queue.add(request);
     }
 
     /**
