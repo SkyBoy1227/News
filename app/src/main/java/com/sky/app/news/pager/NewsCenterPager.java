@@ -181,7 +181,7 @@ public class NewsCenterPager extends BasePager {
         // 专题详情页面
         detailBasePagers.add(new TopicMenuDetailPager(context, data.get(0)));
         // 组图详情页面
-        detailBasePagers.add(new PhotosMenuDetailPager(context));
+        detailBasePagers.add(new PhotosMenuDetailPager(context, data.get(2)));
         // 互动详情页面
         detailBasePagers.add(new InteractMenuDetailPager(context));
 
