@@ -12,6 +12,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.sky.app.news.R;
+import com.sky.app.news.adapter.PhotosMenuDetailPagerAdapter;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
 import com.sky.app.news.domain.PhotosMenuDetailPagerBean;
@@ -21,6 +22,7 @@ import com.sky.app.news.utils.LogUtil;
 import com.sky.app.news.volley.VolleyManager;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +45,8 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
 
     private NewsCenterPagerBean2.DetailPagerData detailPagerData;
     private String url;
+    private List<PhotosMenuDetailPagerBean.DataBean.NewsBean> news;
+    private PhotosMenuDetailPagerAdapter adapter;
 
     public PhotosMenuDetailPager(Context context, NewsCenterPagerBean2.DetailPagerData detailPagerData) {
         super(context);
@@ -103,6 +107,10 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     private void processData(String json) {
         PhotosMenuDetailPagerBean bean = parsedJson(json);
         LogUtil.e("组图解析成功====" + bean.getData().getNews().get(0).getTitle());
+        // 设置适配器
+        news = bean.getData().getNews();
+        adapter = new PhotosMenuDetailPagerAdapter(news);
+        listView.setAdapter(adapter);
     }
 
     private PhotosMenuDetailPagerBean parsedJson(String json) {
