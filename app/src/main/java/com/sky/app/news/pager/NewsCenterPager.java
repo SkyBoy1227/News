@@ -2,6 +2,7 @@ package com.sky.app.news.pager;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -57,6 +58,7 @@ public class NewsCenterPager extends BasePager {
      * 详情页面的集合
      */
     private List<MenuDetailBasePager> detailBasePagers;
+    private long startTime;
 
     public NewsCenterPager(Context context) {
         super(context);
@@ -84,8 +86,10 @@ public class NewsCenterPager extends BasePager {
         if (!TextUtils.isEmpty(json)) {
             processData(json);
         }
-//        getDataFromNet();
-        getDataFromNetByVolley();
+
+        startTime = SystemClock.uptimeMillis();
+        getDataFromNet();
+//        getDataFromNetByVolley();
     }
 
     /**
@@ -97,6 +101,9 @@ public class NewsCenterPager extends BasePager {
         // String请求
         StringRequest request = new StringRequest(StringRequest.Method.GET,
                 Constants.NEWSCENTER_PAGER_URL, response -> {
+            long endTime = SystemClock.uptimeMillis();
+            long passTime = endTime - startTime;
+            LogUtil.e("Volley---passTime======" + passTime);
             LogUtil.e("使用Volley联网请求成功==" + response);
             // 缓存数据
             CacheUtils.putString(context, Constants.NEWSCENTER_PAGER_URL, response);
@@ -126,6 +133,9 @@ public class NewsCenterPager extends BasePager {
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                long endTime = SystemClock.uptimeMillis();
+                long passTime = endTime - startTime;
+                LogUtil.e("xUtils3---passTime======" + passTime);
                 LogUtil.e("使用xUtils3联网请求成功==" + result);
                 // 缓存数据
                 CacheUtils.putString(context, Constants.NEWSCENTER_PAGER_URL, result);
