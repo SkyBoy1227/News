@@ -293,5 +293,12 @@ public class NewsCenterPager extends BasePager {
         View rootView = basePager.rootView;
         basePager.initData();
         flContent.addView(rootView);
+        if (position == 2) {
+            // 组图详情页面
+            ibSwitchListGrid.setVisibility(View.VISIBLE);
+        } else {
+            // 其他页面
+            ibSwitchListGrid.setVisibility(View.GONE);
+        }
     }
 }

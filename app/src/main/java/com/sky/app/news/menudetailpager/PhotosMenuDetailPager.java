@@ -1,13 +1,16 @@
 package com.sky.app.news.menudetailpager;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.GridView;
+import android.widget.ListView;
 
+import com.sky.app.news.R;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.utils.LogUtil;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created with Android Studio.
@@ -20,7 +23,10 @@ import com.sky.app.news.utils.LogUtil;
  */
 public class PhotosMenuDetailPager extends MenuDetailBasePager {
 
-    private TextView textView;
+    @BindView(R.id.listView)
+    ListView listView;
+    @BindView(R.id.gridView)
+    GridView gridView;
 
     public PhotosMenuDetailPager(Context context) {
         super(context);
@@ -28,17 +34,14 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
 
     @Override
     public View initView() {
-        textView = new TextView(context);
-        textView.setTextSize(24);
-        textView.setTextColor(Color.RED);
-        textView.setGravity(Gravity.CENTER);
-        return textView;
+        View view = View.inflate(context, R.layout.photos_mene_detail_pager, null);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void initData() {
         super.initData();
         LogUtil.e("组图详情页面数据被初始化了..");
-        textView.setText("组图详情页面内容");
     }
 }

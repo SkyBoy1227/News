@@ -53,6 +53,9 @@ public class BasePager {
     @BindView(R.id.fl_content)
     public FrameLayout flContent;
 
+    @BindView(R.id.ib_switch_list_grid)
+    public ImageButton ibSwitchListGrid;
+
     public BasePager(Context context) {
         this.context = context;
         // 构造方法一执行，视图就被初始化了
