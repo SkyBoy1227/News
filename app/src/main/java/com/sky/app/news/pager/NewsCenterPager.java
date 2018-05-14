@@ -8,11 +8,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.sky.app.news.activity.MainActivity;
 import com.sky.app.news.base.BasePager;
@@ -27,6 +25,7 @@ import com.sky.app.news.menudetailpager.TopicMenuDetailPager;
 import com.sky.app.news.utils.CacheUtils;
 import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
+import com.sky.app.news.volley.VolleyManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,7 +93,7 @@ public class NewsCenterPager extends BasePager {
      */
     private void getDataFromNetByVolley() {
         // 请求队列
-        RequestQueue queue = Volley.newRequestQueue(context);
+//        RequestQueue queue = Volley.newRequestQueue(context);
         // String请求
         StringRequest request = new StringRequest(StringRequest.Method.GET,
                 Constants.NEWSCENTER_PAGER_URL, response -> {
@@ -116,7 +115,7 @@ public class NewsCenterPager extends BasePager {
             }
         };
         // 添加到队列
-        queue.add(request);
+        VolleyManager.getRequestQueue().add(request);
     }
 
     /**

@@ -2,6 +2,8 @@ package com.sky.app.news;
 
 import android.app.Application;
 
+import com.sky.app.news.volley.VolleyManager;
+
 import org.xutils.x;
 
 /**
@@ -22,5 +24,6 @@ public class NewsApplication extends Application {
         super.onCreate();
         x.Ext.setDebug(BuildConfig.DEBUG);
         x.Ext.init(this);
+        VolleyManager.init(this);
     }
 }
