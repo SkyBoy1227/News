@@ -24,6 +24,7 @@ public class NewsApplication extends Application {
         super.onCreate();
         x.Ext.setDebug(BuildConfig.DEBUG);
         x.Ext.init(this);
+        // 初始化Volley
         VolleyManager.init(this);
     }
 }

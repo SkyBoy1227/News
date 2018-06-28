@@ -296,6 +296,13 @@ public class NewsCenterPager extends BasePager {
         if (position == 2) {
             // 组图详情页面
             ibSwitchListGrid.setVisibility(View.VISIBLE);
+            // 设置点击事件
+            ibSwitchListGrid.setOnClickListener(view -> {
+                // 1.得到组图详情页面对象
+                PhotosMenuDetailPager detailPager = (PhotosMenuDetailPager) detailBasePagers.get(2);
+                // 2.调用组图对象的切换ListView和GridView的方法
+                detailPager.switchListAndGrid(ibSwitchListGrid);
+            });
         } else {
             // 其他页面
             ibSwitchListGrid.setVisibility(View.GONE);

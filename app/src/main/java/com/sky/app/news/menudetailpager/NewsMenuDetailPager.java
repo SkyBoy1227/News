@@ -88,6 +88,8 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         // ViewPager和TabPageIndicator关联
         tabPageIndicator.setViewPager(viewPager);
 
+        tabPageIndicator.setCurrentItem(0);
+
         // 注意以后监听页面的变化，由TabPageIndicator监听页面的变化
         tabPageIndicator.setOnPageChangeListener(new MyOnPageChangeListener());
     }

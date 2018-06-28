@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.android.volley.NetworkResponse;
@@ -47,6 +48,12 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     private String url;
     private List<PhotosMenuDetailPagerBean.DataBean.NewsBean> news;
     private PhotosMenuDetailPagerAdapter adapter;
+
+    /**
+     * true,显示ListView，隐藏GridView
+     * false,显示GridView,隐藏ListView
+     */
+    private boolean isShowListView = true;
 
     public PhotosMenuDetailPager(Context context, NewsCenterPagerBean2.DetailPagerData detailPagerData) {
         super(context);
@@ -115,5 +122,32 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
 
     private PhotosMenuDetailPagerBean parsedJson(String json) {
         return new Gson().fromJson(json, PhotosMenuDetailPagerBean.class);
+    }
+
+    /**
+     * 切换ListView或GridView
+     *
+     * @param imageButton
+     */
+    public void switchListAndGrid(ImageButton imageButton) {
+        if (isShowListView) {
+            // 显示GridView，隐藏ListView
+            isShowListView = false;
+            gridView.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+            adapter = new PhotosMenuDetailPagerAdapter(news);
+            gridView.setAdapter(adapter);
+            // 按钮显示--ListView
+            imageButton.setImageResource(R.drawable.icon_pic_list_type);
+        } else {
+            // 显示ListView，隐藏GridView
+            isShowListView = true;
+            gridView.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+            adapter = new PhotosMenuDetailPagerAdapter(news);
+            listView.setAdapter(adapter);
+            // 按钮显示--GridView
+            imageButton.setImageResource(R.drawable.icon_pic_grid_type);
+        }
     }
 }
