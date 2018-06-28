@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.sky.app.news.R;
 import com.sky.app.news.fragment.ContentFragment;
 import com.sky.app.news.fragment.LeftMenuFragment;
@@ -22,10 +22,11 @@ import com.sky.app.news.fragment.LeftMenuFragment;
  * @author 晏琦云
  * @version ${VERSION}
  */
-public class MainActivity extends SlidingFragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static final String MAIN_CONTENT_TAG = "main_content_tag";
     public static final String LEFT_MENU_TAG = "left_menu_tag";
+    private SlidingMenu slidingMenu;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,10 +44,10 @@ public class MainActivity extends SlidingFragmentActivity {
         setContentView(R.layout.activity_main);
 
         // 2.设置左侧菜单
-        setBehindContentView(R.layout.activity_left_menu);
+        slidingMenu = new SlidingMenu(this);
+        slidingMenu.setMenu(R.layout.activity_left_menu);
 
         // 3.设置右侧菜单
-        SlidingMenu slidingMenu = getSlidingMenu();
         slidingMenu.setSecondaryMenu(R.layout.activity_right_menu);
 
         // 4.设置显示的模式：左侧菜单+主页，左侧菜单+主页面+右侧菜单；主页面+右侧菜单
@@ -62,6 +63,8 @@ public class MainActivity extends SlidingFragmentActivity {
         int width = outMetrics.widthPixels;
         // 6.设置主页占据的宽度：屏幕的2/3
         slidingMenu.setBehindOffset(width * 2 / 3);
+
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
     }
 
     /**
@@ -104,5 +107,9 @@ public class MainActivity extends SlidingFragmentActivity {
      */
     public ContentFragment getContentFragment() {
         return (ContentFragment) getSupportFragmentManager().findFragmentByTag(MAIN_CONTENT_TAG);
+    }
+
+    public SlidingMenu getSlidingMenu() {
+        return slidingMenu;
     }
 }

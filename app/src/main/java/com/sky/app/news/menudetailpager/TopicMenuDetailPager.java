@@ -3,6 +3,7 @@ package com.sky.app.news.menudetailpager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -16,7 +17,6 @@ import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
 import com.sky.app.news.menudetailpager.tabdetailpager.TopicDetailPager;
 import com.sky.app.news.utils.LogUtil;
-import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +38,8 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
-    @BindView(R.id.tabPageIndicator)
-    TabPageIndicator tabPageIndicator;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
     @BindView(R.id.ib_tab_next)
     ImageButton ibTabNext;
 
@@ -60,7 +60,7 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
 
     @Override
     public View initView() {
-        View view = View.inflate(context, R.layout.news_menu_detail_pager, null);
+        View view = View.inflate(context, R.layout.topic_menu_detail_pager, null);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -86,10 +86,16 @@ public class TopicMenuDetailPager extends MenuDetailBasePager {
         viewPager.setAdapter(new TopicMenuDetailPager.NewsMenuDetailPagerAdapter());
 
         // ViewPager和TabPageIndicator关联
-        tabPageIndicator.setViewPager(viewPager);
+//        TabPageIndicator.setViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
 
         // 注意以后监听页面的变化，由TabPageIndicator监听页面的变化
-        tabPageIndicator.setOnPageChangeListener(new TopicMenuDetailPager.MyOnPageChangeListener());
+//        TabPageIndicator.setOnPageChangeListener(new TopicMenuDetailPager.MyOnPageChangeListener());
+        viewPager.addOnPageChangeListener(new TopicMenuDetailPager.MyOnPageChangeListener());
+
+        // 设置滑动或者固定
+//        tabLayout.setTabMode(TabLayout.MODE_FIXED);//导致没法显示
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
