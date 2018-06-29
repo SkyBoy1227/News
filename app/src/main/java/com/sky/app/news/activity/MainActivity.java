@@ -1,17 +1,22 @@
 package com.sky.app.news.activity;
 
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.sky.app.news.R;
 import com.sky.app.news.fragment.ContentFragment;
 import com.sky.app.news.fragment.LeftMenuFragment;
+import com.sky.app.news.utils.PermissionUtils;
 
 /**
  * Created with Android Studio.
@@ -26,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String MAIN_CONTENT_TAG = "main_content_tag";
     public static final String LEFT_MENU_TAG = "left_menu_tag";
+    private static final int REQUEST_CODE = 1;
     private SlidingMenu slidingMenu;
 
     @Override
@@ -34,6 +40,30 @@ public class MainActivity extends AppCompatActivity {
         initSlidingMenu();
 
         initFragments();
+
+        handlePermission();
+    }
+
+    private void handlePermission() {
+        String[] permissions = PermissionUtils.checkPermissions(this);
+        if (permissions.length != 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(permissions, REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE) {
+            for (int result : grantResults) {
+                if (result == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(this, "您需要同意全部权限才能正常使用本软件", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        }
     }
 
     /**

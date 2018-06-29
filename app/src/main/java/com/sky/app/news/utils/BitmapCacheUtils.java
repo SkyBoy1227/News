@@ -15,12 +15,18 @@ import android.os.Handler;
 public class BitmapCacheUtils {
 
     /**
+     * 本地缓存工具类
+     */
+    private LocalCacheUtils localCacheUtils;
+
+    /**
      * 网络缓存工具类
      */
     private NetCacheUtils netCacheUtils;
 
     public BitmapCacheUtils(Handler handler) {
-        netCacheUtils = new NetCacheUtils(handler);
+        localCacheUtils = new LocalCacheUtils();
+        netCacheUtils = new NetCacheUtils(handler, localCacheUtils);
     }
 
     /**
@@ -40,6 +46,11 @@ public class BitmapCacheUtils {
         // 1.从内存中取图片
 
         // 2.从本地文件中取图片
+        Bitmap bitmap = localCacheUtils.getBitmapFromUrl(imageUrl);
+        if (bitmap != null) {
+            LogUtil.e("本地加载图片成功==" + position);
+            return bitmap;
+        }
 
         // 3.请求网络图片
         netCacheUtils.getBitmapFromNet(imageUrl, position);

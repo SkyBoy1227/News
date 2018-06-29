@@ -33,10 +33,16 @@ public class NetCacheUtils {
      */
     public static final int FAILURE = 2;
 
+    /**
+     * 本地缓存工具类
+     */
+    private LocalCacheUtils localCacheUtils;
+
     private Handler handler;
 
-    public NetCacheUtils(Handler handler) {
+    public NetCacheUtils(Handler handler, LocalCacheUtils localCacheUtils) {
         this.handler = handler;
+        this.localCacheUtils = localCacheUtils;
     }
 
     /**
@@ -71,6 +77,7 @@ public class NetCacheUtils {
                     // 在内存中缓存一份
 
                     // 在本地中缓存一份
+                    localCacheUtils.putBitmap(imageUrl, bitmap);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
