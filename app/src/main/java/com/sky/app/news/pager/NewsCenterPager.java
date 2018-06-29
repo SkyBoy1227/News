@@ -183,7 +183,7 @@ public class NewsCenterPager extends BasePager {
         // 组图详情页面
         detailBasePagers.add(new PhotosMenuDetailPager(context, data.get(2)));
         // 互动详情页面
-        detailBasePagers.add(new InteractMenuDetailPager(context));
+        detailBasePagers.add(new InteractMenuDetailPager(context, data.get(2)));
 
         MainActivity mainActivity = (MainActivity) context;
         // 得到左侧菜单
