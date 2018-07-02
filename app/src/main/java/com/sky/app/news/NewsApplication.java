@@ -13,6 +13,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created with Android Studio.
  * 描述: 代表整个软件
@@ -45,5 +47,10 @@ public class NewsApplication extends Application {
         singleThreadPool = new ThreadPoolExecutor(10, 15,
                 1L, TimeUnit.MINUTES,
                 new LinkedBlockingQueue<>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
+        // 设置开启日志,发布时请关闭日志
+        JPushInterface.setDebugMode(true);
+        // 初始化 JPush
+        JPushInterface.init(this);
     }
 }
