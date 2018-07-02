@@ -38,11 +38,17 @@ public class NetCacheUtils {
      */
     private LocalCacheUtils localCacheUtils;
 
+    /**
+     * 内存缓存工具类
+     */
+    private MemoryCacheUtils memoryCacheUtils;
+
     private Handler handler;
 
-    public NetCacheUtils(Handler handler, LocalCacheUtils localCacheUtils) {
+    public NetCacheUtils(Handler handler, LocalCacheUtils localCacheUtils, MemoryCacheUtils memoryCacheUtils) {
         this.handler = handler;
         this.localCacheUtils = localCacheUtils;
+        this.memoryCacheUtils = memoryCacheUtils;
     }
 
     /**
@@ -75,6 +81,7 @@ public class NetCacheUtils {
                     handler.sendMessage(message);
 
                     // 在内存中缓存一份
+                    memoryCacheUtils.putBitmap(imageUrl, bitmap);
 
                     // 在本地中缓存一份
                     localCacheUtils.putBitmap(imageUrl, bitmap);

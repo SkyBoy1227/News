@@ -20,6 +20,15 @@ import java.io.IOException;
 public class LocalCacheUtils {
 
     /**
+     * 内存缓存工具类
+     */
+    private MemoryCacheUtils memoryCacheUtils;
+
+    public LocalCacheUtils(MemoryCacheUtils memoryCacheUtils) {
+        this.memoryCacheUtils = memoryCacheUtils;
+    }
+
+    /**
      * 根据Url获取图片
      *
      * @param imageUrl
@@ -30,11 +39,13 @@ public class LocalCacheUtils {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             try {
                 String fileName = MD5Encoder.encode(imageUrl);
-                File parentFile = new File(Environment.getExternalStorageDirectory() + "/news");
+                File parentFile = new File(Environment.getExternalStorageDirectory(), "news");
                 File file = new File(parentFile, fileName);
                 if (file.exists()) {
                     Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                     if (bitmap != null) {
+                        memoryCacheUtils.putBitmap(imageUrl, bitmap);
+                        LogUtil.e("把图片从本地保存到内存中");
                         return bitmap;
                     }
                 }
