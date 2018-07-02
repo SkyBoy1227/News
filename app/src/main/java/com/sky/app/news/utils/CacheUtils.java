@@ -2,6 +2,13 @@ package com.sky.app.news.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created with Android Studio.
@@ -46,8 +53,38 @@ public class CacheUtils {
      * @param value
      */
     public static void putString(Context context, String key, String value) {
-        SharedPreferences sp = context.getSharedPreferences("sky", Context.MODE_PRIVATE);
-        sp.edit().putString(key, value).apply();
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            FileOutputStream fos = null;
+            try {
+                String fileName = MD5Encoder.encode(key);
+                File parentFile = new File(Environment.getExternalStorageDirectory(), "news/files");
+                if (!parentFile.exists()) {
+                    // 创建目录
+                    parentFile.mkdirs();
+                }
+                File file = new File(parentFile, fileName);
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                fos = new FileOutputStream(file);
+                // 保存文本数据
+                fos.write(value.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.e("文本数据缓存失败");
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            SharedPreferences sp = context.getSharedPreferences("sky", Context.MODE_PRIVATE);
+            sp.edit().putString(key, value).apply();
+        }
     }
 
     /**
@@ -58,7 +95,47 @@ public class CacheUtils {
      * @return
      */
     public static String getString(Context context, String key) {
-        SharedPreferences sp = context.getSharedPreferences("sky", Context.MODE_PRIVATE);
-        return sp.getString(key, "");
+        String result = "";
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            FileInputStream fis = null;
+            ByteArrayOutputStream baos = null;
+            try {
+                String fileName = MD5Encoder.encode(key);
+                File parentFile = new File(Environment.getExternalStorageDirectory(), "news/files");
+                File file = new File(parentFile, fileName);
+                if (file.exists()) {
+                    fis = new FileInputStream(file);
+                    baos = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fis.read(buffer)) != -1) {
+                        baos.write(buffer, 0, length);
+                    }
+                    result = baos.toString();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.e("文本数据获取失败");
+            } finally {
+                if (baos != null) {
+                    try {
+                        baos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            SharedPreferences sp = context.getSharedPreferences("sky", Context.MODE_PRIVATE);
+            result = sp.getString(key, "");
+        }
+        return result;
     }
 }

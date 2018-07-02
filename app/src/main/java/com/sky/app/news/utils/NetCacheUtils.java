@@ -60,6 +60,7 @@ public class NetCacheUtils {
     public void getBitmapFromNet(String imageUrl, int position) {
         // 子线程
         NewsApplication.singleThreadPool.execute(() -> {
+            InputStream is = null;
             try {
                 URL url = new URL(imageUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -71,7 +72,7 @@ public class NetCacheUtils {
                 connection.connect();
                 int responseCode = connection.getResponseCode();
                 if (responseCode == 200) {
-                    InputStream is = connection.getInputStream();
+                    is = connection.getInputStream();
                     Bitmap bitmap = BitmapFactory.decodeStream(new BufferedInputStream(is));
                     // 显示到控件上,发消息把Bitmap和position发出去
                     Message message = Message.obtain();
@@ -92,6 +93,15 @@ public class NetCacheUtils {
                 message.what = FAILURE;
                 message.arg1 = position;
                 handler.sendMessage(message);
+            }
+            finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
