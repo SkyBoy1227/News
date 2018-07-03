@@ -19,6 +19,9 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.sky.app.news.R;
 import com.sky.app.news.base.MenuDetailBasePager;
@@ -30,7 +33,6 @@ import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
 import com.sky.app.news.utils.NetCacheUtils;
 import com.sky.app.news.volley.VolleyManager;
-import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -239,11 +241,25 @@ public class InteractMenuDetailPager extends MenuDetailBasePager {
 //            if (bitmap != null) {
 //                holder.ivIcon.setImageBitmap(bitmap);
 //            }
+
             // 3.使用Picasso请求网络图片
-            Picasso.get()
-                    .load(imageUrl)
+//            Picasso.get()
+//                    .load(imageUrl)
+//                    .placeholder(R.drawable.home_scroll_default)
+//                    .error(R.drawable.home_scroll_default)
+//                    .into(holder.ivIcon);
+
+            // 4.使用Glide请求网络图片
+            RequestOptions options = new RequestOptions()
+                    // 正在加载中的图片
                     .placeholder(R.drawable.home_scroll_default)
+                    // 加载失败的图片
                     .error(R.drawable.home_scroll_default)
+                    // 磁盘缓存策略
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(context)
+                    .load(imageUrl)
+                    .apply(options)
                     .into(holder.ivIcon);
             return convertView;
         }
