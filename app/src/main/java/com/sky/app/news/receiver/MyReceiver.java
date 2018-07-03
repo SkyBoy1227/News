@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.sky.app.news.activity.NewsDetailActivity;
@@ -52,7 +53,7 @@ public class MyReceiver extends BroadcastReceiver {
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
-            String url = "https://www.baidu.com/";
+            String url = "";
 
             try {
                 JSONObject json = new JSONObject(bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -60,6 +61,9 @@ public class MyReceiver extends BroadcastReceiver {
                 LogUtil.e("推送的url=============" + url);
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+            if (TextUtils.isEmpty(url)) {
+                url = "https://www.baidu.com";
             }
 
             // 打开自定义的Activity

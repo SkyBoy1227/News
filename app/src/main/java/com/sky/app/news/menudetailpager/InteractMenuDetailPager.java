@@ -30,6 +30,7 @@ import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
 import com.sky.app.news.utils.NetCacheUtils;
 import com.sky.app.news.volley.VolleyManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -232,12 +233,18 @@ public class InteractMenuDetailPager extends MenuDetailBasePager {
             // 1.使用Volley请求图片-设置图片了
 //            loaderImager(holder, imageUrl );
             // 2.使用自定义的三级缓存请求图片
-            holder.ivIcon.setTag(position);
+//            holder.ivIcon.setTag(position);
             // 内存或者本地
-            Bitmap bitmap = bitmapCacheUtils.getBitmap(imageUrl, position);
-            if (bitmap != null) {
-                holder.ivIcon.setImageBitmap(bitmap);
-            }
+//            Bitmap bitmap = bitmapCacheUtils.getBitmap(imageUrl, position);
+//            if (bitmap != null) {
+//                holder.ivIcon.setImageBitmap(bitmap);
+//            }
+            // 3.使用Picasso请求网络图片
+            Picasso.get()
+                    .load(imageUrl)
+                    .placeholder(R.drawable.home_scroll_default)
+                    .error(R.drawable.home_scroll_default)
+                    .into(holder.ivIcon);
             return convertView;
         }
 
