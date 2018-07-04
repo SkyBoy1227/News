@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "28.0.1"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 40
+        versionName "1.9.5"
+    }
+}
+
+dependencies {
+//    testCompile 'junit:junit:4.12'
+//    testCompile 'org.robolectric:robolectric:3.0-rc3'
+//    testCompile 'com.squareup.assertj:assertj-android:1.0.0'
+}

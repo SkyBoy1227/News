@@ -19,10 +19,10 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.sky.app.news.R;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
@@ -204,6 +204,22 @@ public class InteractMenuDetailPager extends MenuDetailBasePager {
 
     class InteractMenuDetailPagerAdapter extends BaseAdapter {
 
+        private DisplayImageOptions options;
+
+        public InteractMenuDetailPagerAdapter() {
+            options = new DisplayImageOptions.Builder()
+                    .showImageOnLoading(R.drawable.home_scroll_default)
+                    .showImageForEmptyUri(R.drawable.home_scroll_default)
+                    .showImageOnFail(R.drawable.home_scroll_default)
+                    .cacheInMemory(true)
+                    .cacheOnDisk(true)
+                    .considerExifParams(true)
+                    .bitmapConfig(Bitmap.Config.RGB_565)
+                    // 设置矩形圆角
+                    .displayer(new RoundedBitmapDisplayer(20))
+                    .build();
+        }
+
         @Override
         public int getCount() {
             return news.size();
@@ -250,17 +266,20 @@ public class InteractMenuDetailPager extends MenuDetailBasePager {
 //                    .into(holder.ivIcon);
 
             // 4.使用Glide请求网络图片
-            RequestOptions options = new RequestOptions()
-                    // 正在加载中的图片
-                    .placeholder(R.drawable.home_scroll_default)
-                    // 加载失败的图片
-                    .error(R.drawable.home_scroll_default)
-                    // 磁盘缓存策略
-                    .diskCacheStrategy(DiskCacheStrategy.ALL);
-            Glide.with(context)
-                    .load(imageUrl)
-                    .apply(options)
-                    .into(holder.ivIcon);
+//            RequestOptions options = new RequestOptions()
+//                    // 正在加载中的图片
+//                    .placeholder(R.drawable.home_scroll_default)
+//                    // 加载失败的图片
+//                    .error(R.drawable.home_scroll_default)
+//                    // 磁盘缓存策略
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+//            Glide.with(context)
+//                    .load(imageUrl)
+//                    .apply(options)
+//                    .into(holder.ivIcon);
+
+            // 5.使用ImageLoader请求网络图片
+            ImageLoader.getInstance().displayImage(imageUrl, holder.ivIcon, options);
             return convertView;
         }
 
