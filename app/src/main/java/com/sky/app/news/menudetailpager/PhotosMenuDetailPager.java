@@ -1,8 +1,10 @@
 package com.sky.app.news.menudetailpager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -13,6 +15,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.sky.app.news.R;
+import com.sky.app.news.activity.ShowImageActivity;
 import com.sky.app.news.adapter.PhotosMenuDetailPagerAdapter;
 import com.sky.app.news.base.MenuDetailBasePager;
 import com.sky.app.news.domain.NewsCenterPagerBean2;
@@ -64,7 +67,22 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.photos_menu_detail_pager, null);
         ButterKnife.bind(this, view);
+        // 设置点击某条的item的监听
+        listView.setOnItemClickListener(new MyOnItemClickListener());
+        gridView.setOnItemClickListener(new MyOnItemClickListener());
         return view;
+    }
+
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            PhotosMenuDetailPagerBean.DataBean.NewsBean data = news.get(position);
+            String imageUrl = Constants.BASE_URL + data.getSmallimage();
+            Intent intent = new Intent(context, ShowImageActivity.class);
+            intent.putExtra("url", imageUrl);
+            context.startActivity(intent);
+        }
     }
 
     @Override

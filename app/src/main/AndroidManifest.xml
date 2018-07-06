@@ -55,6 +55,7 @@
             android:name=".activity.MainActivity"
             android:theme="@style/Theme.PageIndicatorDefaults" />
         <activity android:name=".activity.NewsDetailActivity" />
+        <activity android:name=".activity.ShowImageActivity" />
 
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity

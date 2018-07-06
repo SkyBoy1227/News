@@ -13,7 +13,7 @@ public class Constants {
     /**
      * ip地址
      */
-    public static final String HOST = "192.168.56.1";
+    public static final String HOST = "172.16.0.40";
 
     /**
      * 联网请求服务器的基本地址

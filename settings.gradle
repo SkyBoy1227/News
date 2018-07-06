@@ -1,3 +1,4 @@
 include ':app', ':SlidingMenu_library', ':ViewPagerIndicator_library', ':RefreshListView'
 include ':PullToRefresh_library'
 include ':Image-Loader_library'
+include ':PhotoView_library'
