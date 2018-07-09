@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -24,12 +25,16 @@ import com.sky.app.news.utils.CacheUtils;
 import com.sky.app.news.utils.Constants;
 import com.sky.app.news.utils.LogUtil;
 import com.sky.app.news.volley.VolleyManager;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Request;
 
 /**
  * Created with Android Studio.
@@ -94,7 +99,61 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
         if (!TextUtils.isEmpty(saveJson)) {
             processData(saveJson);
         }
-        getDataFromNet();
+        getDataFromNetByOkHttpUtils();
+//        getDataFromNet();
+    }
+
+    /**
+     * 使用OkHttpUtils联网请求数据
+     */
+    private void getDataFromNetByOkHttpUtils() {
+        OkHttpUtils
+                .get()
+                .url(url)
+                .id(100)
+                .build()
+                .execute(new MyStringCallback());
+    }
+
+    public class MyStringCallback extends StringCallback {
+        @Override
+        public void onBefore(Request request, int id) {
+        }
+
+        @Override
+        public void onAfter(int id) {
+        }
+
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            e.printStackTrace();
+            LogUtil.e("使用OkHttp联网请求失败==" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            LogUtil.e("onResponse：complete");
+            LogUtil.e("使用OkHttp联网请求成功==" + response);
+            // 缓存数据
+            CacheUtils.putString(context, url, response);
+
+            processData(response);
+            switch (id) {
+                case 100:
+                    Toast.makeText(context, "http", Toast.LENGTH_SHORT).show();
+                    break;
+                case 101:
+                    Toast.makeText(context, "https", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
+        public void inProgress(float progress, long total, int id) {
+            LogUtil.e("inProgress:" + progress);
+        }
     }
 
     /**

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/SlidingMenu_library" />
             <option value="$PROJECT_DIR$/ViewPagerIndicator_library" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/okhttputils_library" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

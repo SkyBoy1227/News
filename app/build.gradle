@@ -48,4 +48,5 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation project(':Image-Loader_library')
     implementation project(':PhotoView_library')
+    implementation project(':okhttputils_library')
 }

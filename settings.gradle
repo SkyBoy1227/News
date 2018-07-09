@@ -2,3 +2,4 @@ include ':app', ':SlidingMenu_library', ':ViewPagerIndicator_library', ':Refresh
 include ':PullToRefresh_library'
 include ':Image-Loader_library'
 include ':PhotoView_library'
+include ':okhttputils_library'
