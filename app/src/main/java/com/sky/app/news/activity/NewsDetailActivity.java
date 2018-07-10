@@ -11,13 +11,13 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sky.app.news.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 /**
  * Created with Android Studio.
@@ -96,11 +96,42 @@ public class NewsDetailActivity extends AppCompatActivity {
                 showChangeTextSizeDialog();
                 break;
             case R.id.ib_share:
-                Toast.makeText(this, "分享", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "分享", Toast.LENGTH_SHORT).show();
+                showShare();
                 break;
             default:
                 break;
         }
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        // 关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // 分享时Notification的图标和文字  2.5.9以后的版本不     调用此方法
+        // oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(getString(R.string.app_name));
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://www.atguigu.com");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("世界上最遥远的距离，是我在if里你在else里，似乎一直相伴又永远分离；\n" +
+                "     世界上最痴心的等待，是我当case你是switch，或许永远都选不上自己；\n" +
+                "     世界上最真情的相依，是你在try我在catch。无论你发神马脾气，我都默默承受，静静处理。到那时，再来期待我们的finally。");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://www.atguigu.com");
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("word天哪，太精辟了");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl("http://www.atguigu.com");
+
+        // 启动分享GUI
+        oks.show(this);
     }
 
     /**

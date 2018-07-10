@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.test.espresso.core.internal.deps.guava.util.concurrent.ThreadFactoryBuilder;
 
+import com.mob.MobSDK;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -60,6 +61,9 @@ public class NewsApplication extends Application {
 
         // 初始化ImageLoader
         initImageLoader(getApplicationContext());
+
+        // 初始化ShareSDK
+        MobSDK.init(this);
     }
 
     public static void initImageLoader(Context context) {
